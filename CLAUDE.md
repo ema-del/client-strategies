@@ -2,7 +2,7 @@
 
 Trigger word: **"scale"**. When Ema says "scale" (optionally + a client name to scope it to one client), run this routine.
 
-This file reuses the rules from the weekly funnel reporting session (`ema-del/business` → `CLAUDE.md`), with one change: the goal is **scaling clients**, not just finding bottlenecks. Every run answers two questions per client: **Can we scale? If yes, what's the next scaling step? If no, what has to be fixed first?**
+This file reuses the rules from the weekly funnel reporting session (`ema-del/business` → `CLAUDE.md`), with one change: the goal is **scaling clients**, not just finding bottlenecks. Every run answers per client: **Is there a funnel leak? If not, do they match the scaling rules? Verdict: Scale, or Don't scale (first fix x, y, z).**
 
 Source for the scaling rules: "Pacow Playbook (from Skool)" in Google Drive (01. Clients), sections "Scaling & Optimizing", "Live Webinar / Challenge Funnel", "IG Follower Funnel / DM Ad Funnel" and "Ads Foundations". Follow the playbook, not generic advice.
 
@@ -103,19 +103,26 @@ Before any scaling call, run the backward decision tree:
 
 ## Scaling decision per client
 
-Every client lands in exactly one bucket:
+Every "scale" run answers 3 questions per client, in this order:
 
-- **🟢 Scale:** funnel healthy, cost per booked call at/under target on trailing 3 and 7 days, ad set out of learning. Give the next step for their level (e.g. "+20% budget", "add testing ad set", "promote ad X").
-- **🟡 Hold / Refresh:** on target but not ready (in learning, just scaled within 2-3 days, small sample), or cost per booked call 50%+ above normal over trailing 3 days → refresh with 2-3 ads.
-- **🔴 Fix first:** a broken upstream number. No budget increase until it's fixed.
+1. **Is there a funnel leak?** Run the backward decision tree. Any Bad number (or a Borderline one that clearly drags booked calls) is a leak. If there's a leak, stop here: the verdict is Don't scale.
+2. **If no leak: do they match the scaling rules?** Check against their level:
+   - Cost per booked call at/under target on the trailing 7 days AND trailing 3 days.
+   - Not 50%+ above normal over the trailing 3 days (that's a refresh, not a scale).
+   - Ad set out of learning, and no budget change in the last 2-3 days (check Meta if access allows; otherwise flag as "verify in Ads Manager").
+   - Enough sample to trust it (not 1-2 booked calls).
+   - Level 2+: a testing ad set exists. Level 2+: ABO, not CBO.
+3. **Final verdict:** exactly one of
+   - **✅ Scale:** the next step for their level (e.g. "+20% budget on the main ad set", "add a $100-200/day testing ad set", "promote ad X").
+   - **❌ Don't scale. First fix:** x, y, z (in order, most upstream first, each as Issue → Solution → Tangible Action).
 
 ## Output format
 
 - Chat tables, **never an artifact**.
-- Per client: level (1/2/3), booked calls/day, cost per booked call (3-day and 7-day vs target), bucket (🟢/🟡/🔴).
-- Every recommendation uses **Issue → Solution → Tangible Action**. Simple, concrete, no fluff.
+- Per client: level (1/2/3), booked calls/day, cost per booked call (3-day and 7-day vs target), then the 3 questions above.
+- Every fix uses **Issue → Solution → Tangible Action**. Simple, concrete, no fluff.
 - Every client gets a full, independent write-up. Never "same as above."
-- End every full run with a short recap: 🟢 who to scale and how, 🔴 who to fix first and what. Include ⚠️ small sample / revenue lag flags.
+- End every full run with a recap table: client, verdict, first thing to do. Include ⚠️ small sample / revenue lag flags.
 - Ema's writing rules apply: no em dashes, no buzzwords, short sentences, specific numbers.
 
 ## Client roster
