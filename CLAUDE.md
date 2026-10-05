@@ -8,21 +8,44 @@ Source for the scaling rules: "Pacow Playbook (from Skool)" in Google Drive (01.
 
 This routine is **READ-ONLY**. Never write, PUT, POST, or otherwise modify any Google Sheet, landing page, ad account or budget. Diagnosis and recommendations only. Ema makes every live change.
 
-## Data source
+## Data source (ALWAYS follow these steps, in order)
 
-Sheet-only for the standard run. Pull numbers from the client's Google Sheet, not the Meta Ads API.
+Every "scale" run pulls the full daily data for every client. Do not skip steps, do not use `read_file_content` on the sheets (it only returns the sheet structure, no numbers), and never guess numbers.
 
-- **Eligibility check:** open the client's Sheet, current month's tab (daily rows), look at the two most recent dated rows. If both show $0/blank spend, skip the client for this run.
-- **Performance window:** trailing 7 days of daily rows, aggregated from raw counts (sum numerators and denominators, then compute rates). Never average daily percentage columns.
-- **Scaling window:** also check the **trailing 3 days** of cost per booked call. The playbook's refresh and budget decisions run on the trailing 3 days.
-- **Booked calls per day:** total booked calls in the trailing 7 days ÷ 7. This sets the client's scaling level.
-- **Fallback targets:** if a client's own Dash "Targets" cell is blank, use the client's best historical month for that metric. Only then use the generic fallback (CPM <$30, CPC <$4, directional only for non-USD accounts).
+**Step 1. Download every workbook (all 8 in one parallel batch).**
+For each client in the roster, call Google Drive `download_file_content` with:
+- `fileId` = the client's Sheet ID
+- `exportMimeType` = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
 
-### Known Google Drive tooling limitation
-`read_file_content` on large multi-tab sheets may return a structural summary instead of cell values. Retry once, then fall back to `download_file_content` (CSV export), which only reaches the first tab ("Dash"). If daily-tab data is needed and both fail, say so. Never guess numbers.
+This exports the whole workbook (every month tab, daily rows). The result is too big for chat, so the tool saves it to a file and the error message gives the path (`.../tool-results/mcp-Google_Drive-download_file_content-XXXX.txt`). Note each client's path. That's expected, not a failure.
 
-### Meta Ads access
-Use the Meta Ads MCP for deep dives when a scaling call needs it: ad set learning status, current daily budget, ABO vs CBO setup, number of live ads, which ad is winning, frequency. Check `is_ads_mcp_enabled` via `ads_get_ad_accounts` first. If an account is blocked, say so plainly. **Read only. Never change a budget, status or ad.**
+**Step 2. Run the data script once with all 8 files.**
+```
+python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> zin=<path> cmtc=<path> pp=<path> c101=<path> nae=<path> sma=<path>
+```
+(`openpyxl` is installed by the SessionStart hook in `.claude/settings.json`. If it's missing: `pip install -q openpyxl`.)
+
+Per client the script prints:
+- **ELIGIBLE:** checks the two most recent dated rows up to yesterday. "NO" = skip the client this run.
+- **TARGETS** from the current month tab.
+- **DAILY last 10 days** (spend / clicks / leads / booked 30 / booked 60 / taken 30 / taken 60, plus notes).
+- **T7** (yesterday and the 6 days before) and **T3** (last 3 days), aggregated from raw counts: CPM, CTR, CPC, LPCR, CPL, pre-qualified and qualified rates, cost per qualified, lead to booked, cost per booked (30, 60, all), show-up, close rate, cost per client, booked calls per day.
+- **Month history:** current month to date + the last 3 full months.
+- **BEST MONTH** cost per booked call (months with 5+ bookings), the fallback baseline when a target is blank.
+- **FLAG** when calls taken = 0 but bookings > 0 in T7.
+
+The windows end **yesterday**, because today's row is usually incomplete.
+
+**Step 3. Only if a download fails** for a client: retry that one once. If it still fails, say so for that client and carry on with the rest. Never fill gaps with guesses.
+
+**Step 4. Meta Ads (only for clients that pass step 1, "no leak").** Use the Meta Ads MCP to check what the sheet can't show: ad set learning status, last budget change, current daily budget, ABO vs CBO, number of live ads, testing ad set (Level 2+), and frequency. Check `is_ads_mcp_enabled` via `ads_get_ad_accounts` first. EdvancedLearning and Class101 are MCP-blocked: write "verify in Ads Manager". **Read only. Never change a budget, status or ad.**
+
+### Reading the data
+- **Calls taken lag:** if the script flags calls taken = 0 with bookings > 0, the sheet hasn't been updated yet. Judge show-up on the last full month instead, and say so once.
+- **Template targets:** right now all 8 sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
+- **Which booked call counts:** for Pacow, the 60-min call is the real goal (the 30-min call is the first step). For the B2C clients, the 30-min call is the main booking.
+- **Year boundary:** sheets are per year. In early January the T7 window can reach into last year's sheet. If so, say which days are missing.
+- **Fallback targets:** if a target cell is blank, use the client's BEST MONTH from the script. Only then the generic fallback (CPM <$30, CPC <$4, directional only for non-USD accounts).
 
 ## Core scaling rules (from the playbook)
 
@@ -127,16 +150,16 @@ Every "scale" run answers 3 questions per client, in this order:
 
 ## Client roster
 
-| Client | Meta Account | Sheet ID | Notes |
-|---|---|---|---|
-| Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
-| EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
-| Zinkerz | act_638396012894614 | `1zJqc4H7PsyAzext6MMpuGFYMPrr2Yrx1sUCCpy2fSho` | |
-| Core Medical Training Center | act_1101825501101670 | `1nordSfrBDgMIz80lf_VSbQA7Y9w4w9zxawph4okq2L8` | Pre-Qualified/Qualified not tracked by design |
-| Personalized Prep | act_1747267276471518 | `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` | |
-| Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
-| North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
-| Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` | Pre-Qualified/Qualified not tracked by design. GBP. |
+| Key | Client | Meta Account | Sheet ID | Notes |
+|---|---|---|---|---|
+| pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
+| edv | EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
+| zin | Zinkerz | act_638396012894614 | `1zJqc4H7PsyAzext6MMpuGFYMPrr2Yrx1sUCCpy2fSho` | |
+| cmtc | Core Medical Training Center | act_1101825501101670 | `1nordSfrBDgMIz80lf_VSbQA7Y9w4w9zxawph4okq2L8` | Pre-Qualified/Qualified not tracked by design |
+| pp | Personalized Prep | act_1747267276471518 | `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` | |
+| c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
+| nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
+| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` | Pre-Qualified/Qualified not tracked by design. GBP. |
 
 College Zoom is offboarded (2026-09-29). "Smarta Tutoring" and "Much Smarter 1:1 Coaching" (act_1188526852804019) are different companies. Never mix them up.
 

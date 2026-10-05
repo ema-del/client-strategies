@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c 'import openpyxl' 2>/dev/null || pip install -q openpyxl >/dev/null 2>&1 || true"
+          }
+        ]
+      }
+    ]
+  }
+}
