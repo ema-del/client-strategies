@@ -18,7 +18,7 @@ except ImportError:
     sys.exit("openpyxl missing: run `pip install -q openpyxl` and retry")
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-PCT = {"CTR", "LPCR", "PQ_rate", "Q_rate", "lead_to_booked", "SUP_30", "SUP_60", "close_rate"}
+PCT = {"CTR", "LPCR", "PQ_rate", "Q_rate", "lead_to_booked", "SUP_30", "SUP_60", "close_rate", "ROI_contracted", "ROI_collected"}
 
 # Column names (row 1 of each month tab). Matched by name so a moved column still works.
 COLS = {
@@ -102,7 +102,9 @@ def agg(rows):
         "cost_per_booked_30": d(s["spend"], s["b30"]), "cost_per_booked_60": d(s["spend"], s["b60"]),
         "cost_per_booked_all": d(s["spend"], booked),
         "SUP_30": d(s["t30"], s["b30"]), "SUP_60": d(s["t60"], s["b60"]),
+        "cost_per_taken_30": d(s["spend"], s["t30"]), "cost_per_taken_60": d(s["spend"], s["t60"]),
         "close_rate": d(s["new"], taken), "cost_per_client": d(s["spend"], s["new"]),
+        "ROI_contracted": d(s["rev"], s["spend"]), "ROI_collected": d(s["coll"], s["spend"]),
         "booked_per_day": round(booked / len(rows), 2) if rows else 0,
     }
 
@@ -117,6 +119,86 @@ def fmt(a):
         else:
             out.append(f"{k}={v:,.2f}" if isinstance(v, float) else f"{k}={v}")
     return " | ".join(out)
+
+
+# Sheet target column -> computed key. Cost metrics use "Target: < $X Max: $Y"; rate metrics use "> N%".
+TARGET_MAP = [
+    (r"^CTR", "CTR", "spend"), (r"^Cost per Lead", "CPL", "leads"),
+    (r"^Cost Per (15|30) Booked", "cost_per_booked_30", "b30"), (r"^(15|30) SUP", "SUP_30", "b30"),
+    (r"^Cost Per (15|30) Call Taken", "cost_per_taken_30", "t30"),
+    (r"^Cost Per 60 Booked", "cost_per_booked_60", "b60"), (r"^60 SUP", "SUP_60", "b60"),
+    (r"^Cost Per 60 Call Taken", "cost_per_taken_60", "t60"),
+    (r"^Call Closing Rate", "close_rate", "t30"), (r"^Cost Per New Client", "cost_per_client", "new"),
+    (r"^Contracted-ROI", "ROI_contracted", "spend"), (r"^Collected-ROI", "ROI_collected", "spend"),
+]
+UNTRACKED_Q = {"cmtc", "sma"}  # Pre-Qualified/Qualified not tracked by design
+
+
+def parse_target(t):
+    t = str(t)
+    nums = [float(x.replace(",", "")) for x in re.findall(r"[\d][\d,]*\.?\d*", t)]
+    if "Max" in t and len(nums) >= 2:
+        return ("cost", nums[0], nums[1])
+    if ">" in t and nums:
+        return ("rate", nums[0] / 100, None)
+    return None
+
+
+def scorecard(key, wb, month, a, label, top_only=False, uses_60=True):
+    """Every metric in the chain, judged Good / Borderline / BAD. Nothing skipped."""
+    ws = wb[month]
+    header = [str(c.value or "").strip() for c in ws[1]]
+    tgt = [c.value for c in ws[2]]
+    lines, bad = [], []
+
+    def judge(name, val, rule, events_key):
+        if a["spend"] <= 0:
+            return
+        if val is None:
+            if rule[0] == "cost" and a.get(events_key, 0) == 0:
+                lines.append(f"{name}: none on ${a['spend']:,.0f} spend -> BAD"); bad.append(f"{name} (zero on ${a['spend']:,.0f})")
+            return
+        if rule[0] == "cost":
+            t, mx = rule[1], rule[2]
+            v = "Good" if val < t else ("Borderline" if val <= 1.3 * mx else "BAD")
+            lines.append(f"{name}: {val:,.2f} (target <{t:g}, max {mx:g}) -> {v}")
+        else:
+            v = "Good" if val >= rule[1] else "BAD"
+            lines.append(f"{name}: {val * 100:.1f}% (target >{rule[1] * 100:g}%) -> {v}")
+        if v == "BAD":
+            bad.append(name)
+
+    # LPCR: fixed rule (goal 20%, >=15 good, 12-15 borderline, <12 bad)
+    if a["LPCR"] is not None and a["spend"] > 0:
+        v = "Good" if a["LPCR"] >= 0.15 else ("Borderline" if a["LPCR"] >= 0.12 else "BAD")
+        lines.append(f"LPCR: {a['LPCR'] * 100:.1f}% (goal 20%) -> {v}")
+        if v == "BAD":
+            bad.append("LPCR")
+    # Lead-to-qualified: playbook target >20% (skip where not tracked by design)
+    if key not in UNTRACKED_Q and a["leads"] > 0:
+        v = "Good" if (a["Q_rate"] or 0) >= 0.20 else "BAD"
+        lines.append(f"Lead-to-qualified: {(a['Q_rate'] or 0) * 100:.1f}% (target >20%) -> {v}")
+        if v == "BAD":
+            bad.append("Lead-to-qualified")
+    lagging = {"SUP_30", "SUP_60", "cost_per_taken_30", "cost_per_taken_60", "close_rate",
+               "cost_per_client", "ROI_contracted", "ROI_collected"}
+    for pat, k, ev in TARGET_MAP:
+        if top_only and k in lagging:
+            continue  # calls taken / closes / revenue lag the spend: judged on the last full month
+        if not uses_60 and k.endswith("_60"):
+            continue  # client doesn't run 60-min calls
+        for h, t in zip(header, tgt):
+            if re.match(pat, h, re.I) and t:
+                rule = parse_target(t)
+                if rule:
+                    judge(h, a.get(k), rule, ev)
+                break
+    print(f"SCORECARD {label}:")
+    for l in lines:
+        print("   ", l)
+    if top_only:
+        print("    (show-up, cost per call taken, close rate, cost per client and ROI are judged on the last full month: they lag)")
+    print(f"ALL BAD ({label}):", ", ".join(bad) if bad else "none")
 
 
 def run(key, path, as_of):
@@ -153,6 +235,33 @@ def run(key, path, as_of):
         if rows:
             label = MONTHS[m - 1] + (" (MTD)" if back == 0 else "")
             print(f"{label}:", fmt(agg(rows)))
+    # Every bad number: T7 for the top of the funnel, last full month for the slower stages
+    cur = MONTHS[end.month - 1]
+    recent90 = [r for d, r in days.items() if end - dt.timedelta(days=90) <= d <= end]
+    uses_60 = sum(r["b60"] for r in recent90) > 0
+    scorecard(key, wb, cur, agg(t7), "T7", top_only=True, uses_60=uses_60)
+    pm_y, pm_m = (end.year, end.month - 1) if end.month > 1 else (end.year - 1, 12)
+    last_full = [r for d, r in days.items() if d.year == pm_y and d.month == pm_m]
+    if last_full:
+        scorecard(key, wb, MONTHS[pm_m - 1], agg(last_full), f"{MONTHS[pm_m - 1]} (last full month)", uses_60=uses_60)
+    # ROI flag: collected under 2x or contracted under 4x
+    print("ROI CHECK (flag if collected < 200% or contracted < 400%):")
+    windows = []
+    for back in range(1, 4):
+        y, m = end.year, end.month - back
+        while m < 1:
+            m += 12; y -= 1
+        windows.append((y, m))
+    for lab, sel in [(f"{MONTHS[pm_m - 1]}", [(pm_y, pm_m)]), ("last 3 full months", windows),
+                     ("year to date", [(end.year, m) for m in range(1, end.month + 1)])]:
+        rows = [r for d, r in days.items() if (d.year, d.month) in sel and d <= end]
+        a = agg(rows) if rows else None
+        if not a or a["spend"] <= 0:
+            continue
+        rc, rl = a["ROI_contracted"] or 0, a["ROI_collected"] or 0
+        flag = "ROI FLAG" if (rl < 2 or rc < 4) else "ok"
+        print(f"    {lab}: spend {a['spend']:,.0f} | contracted {a['rev']:,.0f} ({rc * 100:.0f}%) | "
+              f"collected {a['coll']:,.0f} ({rl * 100:.0f}%) | clients {a['new']:.0f} -> {flag}")
     # Best historical month for cost per booked (fallback baseline)
     best = None
     for m in range(1, 13):

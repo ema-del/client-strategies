@@ -33,6 +33,8 @@ Per client the script prints:
 - **Month history:** current month to date + the last 3 full months.
 - **BEST MONTH** cost per booked call (months with 5+ bookings), the fallback baseline when a target is blank.
 - **FLAG** when calls taken = 0 but bookings > 0 in T7.
+- **SCORECARD T7** (top of funnel: CTR, LPCR, CPL, lead-to-qualified, cost per booked) and **SCORECARD last full month** (every metric with a sheet target, including show-up, cost per call taken, close rate, cost per client, ROI). Each line says Good / Borderline / BAD, then an **ALL BAD** line.
+- **ROI CHECK** for the last full month, the last 3 full months and year to date, with **ROI FLAG** when collected ROI is under 200% or contracted ROI is under 400%.
 
 The windows end **yesterday**, because today's row is usually incomplete.
 
@@ -124,6 +126,27 @@ Before any scaling call, run the backward decision tree:
 5. Revenue lag: closing rate, cost per client and ROI lag spend by weeks. Flag it.
 6. Small sample: 1-2 booked/taken/closed in the window → say so, don't treat as signal.
 
+## Track every bad number (never stop at the first one)
+
+The backward decision tree finds the **root cause** (most-upstream broken number). That's still the first fix. But every run also **lists every BAD number in the chain**, all the way to ROI. Don't stop at cost per booked, bookings or show-up.
+
+- Use the script's two scorecards: **T7** for the top of the funnel, **last full month** for the slower stages (show-up, call taken, close rate, cost per client, ROI lag the spend, so 7 days is too early to judge them).
+- In each client write-up, add an **"All bad numbers"** line with every BAD from both scorecards, grouped: root cause first, then downstream symptoms, then independent problems.
+- A downstream BAD that's caused by an upstream one (e.g. high cost per client because LPCR is bad) is still listed, marked "symptom of X".
+- A downstream BAD that isn't caused upstream (e.g. close rate 5% while bookings are cheap) is its own issue and gets its own Issue → Solution → Tangible Action.
+- Skip 60-min call metrics for clients with no 60-min bookings in the last 90 days (the script does this).
+- Pre-Qualified/Qualified stays "not tracked, skip" for Core Medical and Smarta.
+
+## ROI flag (every run, every client)
+
+Targets from the sheets: **Collected ROI above 200%** and **Contracted ROI above 400%**.
+
+- **🚩 ROI FLAG** when either is under target in the **last full month** or the **last 3 full months**. Show the year-to-date number for context.
+- Show it in every client write-up and in the recap table, even when the verdict is already "Don't scale".
+- **Revenue lag:** clients often pay weeks after the call. A weak last month with a healthy 3-month number = flag, but say "likely lag".
+- **Zero revenue for 3+ months while calls are being taken:** flag it as "ROI FLAG: is revenue being tracked in the sheet?" Ask Ema before calling it a real 0.
+- **Scaling rule:** an ROI flag on the last 3 full months blocks a "Scale" verdict unless the shortfall is clearly revenue lag. Scaling spend into a funnel that doesn't pay back makes the loss bigger.
+
 ## Scaling decision per client
 
 Every "scale" run answers 3 questions per client, in this order:
@@ -135,6 +158,7 @@ Every "scale" run answers 3 questions per client, in this order:
    - Ad set out of learning, and no budget change in the last 2-3 days (check Meta if access allows; otherwise flag as "verify in Ads Manager").
    - Enough sample to trust it (not 1-2 booked calls).
    - Level 2+: a testing ad set exists. Level 2+: ABO, not CBO.
+   - No ROI flag on the last 3 full months (collected 200%+, contracted 400%+), unless it's clearly revenue lag.
 3. **Final verdict:** exactly one of
    - **✅ Scale:** the next step for their level (e.g. "+20% budget on the main ad set", "add a $100-200/day testing ad set", "promote ad X").
    - **❌ Don't scale. First fix:** x, y, z (in order, most upstream first, each as Issue → Solution → Tangible Action).
@@ -142,10 +166,10 @@ Every "scale" run answers 3 questions per client, in this order:
 ## Output format
 
 - Chat tables, **never an artifact**.
-- Per client: level (1/2/3), booked calls/day, cost per booked call (3-day and 7-day vs target), then the 3 questions above.
+- Per client: level (1/2/3), booked calls/day, cost per booked call (3-day and 7-day vs target), ROI (last full month + last 3 full months, with 🚩 if flagged), the "All bad numbers" line, then the 3 questions above.
 - Every fix uses **Issue → Solution → Tangible Action**. Simple, concrete, no fluff.
 - Every client gets a full, independent write-up. Never "same as above."
-- End every full run with a recap table: client, verdict, first thing to do. Include ⚠️ small sample / revenue lag flags.
+- End every full run with a recap table: client, verdict, first thing to do, number of BAD metrics, ROI flag (🚩 or ok). Include ⚠️ small sample / revenue lag flags.
 - Ema's writing rules apply: no em dashes, no buzzwords, short sentences, specific numbers.
 
 ## Client roster
