@@ -144,7 +144,7 @@ Targets from the sheets: **Collected ROI above 200%** and **Contracted ROI above
 - **🚩 ROI FLAG** when either is under target in the **last full month** or the **last 3 full months**. Show the year-to-date number for context.
 - Show it in every client write-up and in the recap table, even when the verdict is already "Don't scale".
 - **Revenue lag:** clients often pay weeks after the call. A weak last month with a healthy 3-month number = flag, but say "likely lag".
-- **Zero revenue for 3+ months while calls are being taken:** flag it as "ROI FLAG: is revenue being tracked in the sheet?" Ask Ema before calling it a real 0.
+- **Zero revenue:** always flag it, no exceptions. Some sheets have revenue that was never entered, others are genuinely bad. Either way it gets the 🚩. Add "(check revenue is entered)" next to the flag, but never drop or soften the flag.
 - **Scaling rule:** an ROI flag on the last 3 full months blocks a "Scale" verdict unless the shortfall is clearly revenue lag. Scaling spend into a funnel that doesn't pay back makes the loss bigger.
 
 ## Scaling decision per client
