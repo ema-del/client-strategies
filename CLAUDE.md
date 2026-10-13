@@ -127,6 +127,22 @@ Before any scaling call, run the backward decision tree:
 5. Revenue lag: closing rate, cost per client and ROI lag spend by weeks. Flag it.
 6. Small sample: 1-2 booked/taken/closed in the window → say so, don't treat as signal.
 
+## ALWAYS walk backwards from ROI (every client, every run)
+
+Run `python3 scripts/roi_backwards.py --as-of <today> <key>=<path> ...` on the same files as step 2. It treats ROI as a chain of multiplications and walks it **backwards, metric by metric, through every metric in the sheet**:
+
+collected/contracted → deal size → close rate → show-up (60) → 30-min taken to 60-min booked → show-up (30) → booked rate → lead to qualified → LPCR → CTR → CPM
+
+For each link it prints the actual, the baseline (sheet target, else playbook target, else the client's best month with 20+ leads; deal size and collection use the year-to-date average) and **"ROI x if fixed alone"**: how many times ROI would multiply if only that link hit its baseline. A link at zero is BROKEN. It also prints **DATA** notes when the sheet itself is inconsistent (more bookings than qualified leads, more 60-min bookings than 30-min calls taken, calls taken not entered).
+
+How to use it:
+- **Start every client write-up from ROI and go backwards.** The answer to "why is there no ROI" is the ranked list of leaks with their multipliers, not the first bad number at the top of the funnel.
+- **Never judge a link the DATA notes say is broken.** Say the data is wrong and what to fix in the sheet, then rank the rest.
+- **Use the right close rate.** For 2-step funnels (Pacow: 30-min then 60-min), close rate = clients ÷ 60-min calls taken. The sheet's "Call Closing Rate" divides by all calls and understates it.
+- **Fixes multiply.** Two x1.5 fixes = x2.25. Show what fixing the top 2-3 together does to ROI.
+- **Any decision about a campaign, ad set or budget gets checked against this chain** (e.g. a campaign with 30% higher CPM has to improve later links by more than 30% to pay off).
+- UCA and MS: the walk needs a full month of data. Until then, use the scorecards.
+
 ## Track every bad number (never stop at the first one)
 
 The backward decision tree finds the **root cause** (most-upstream broken number). That's still the first fix. But every run also **lists every BAD number in the chain**, all the way to ROI. Don't stop at cost per booked, bookings or show-up.
