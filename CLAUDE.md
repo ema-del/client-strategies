@@ -164,30 +164,60 @@ Targets from the sheets: **Collected ROI above 200%** and **Contracted ROI above
 - **Zero revenue:** always flag it, no exceptions. Some sheets have revenue that was never entered, others are genuinely bad. Either way it gets the 🚩. Add "(check revenue is entered)" next to the flag, but never drop or soften the flag.
 - **Scaling rule:** an ROI flag on the last 3 full months blocks a "Scale" verdict unless the shortfall is clearly revenue lag. Scaling spend into a funnel that doesn't pay back makes the loss bigger.
 
-## Scaling decision per client
+## Scale or no scale: 4 gates (all must pass)
 
-Every "scale" run answers 3 questions per client, in this order:
+The ROI walk says where money leaks. The gates say whether more budget would make more money. Check in this order and stop at the first NO.
 
-1. **Is there a funnel leak?** Run the backward decision tree. Any Bad number (or a Borderline one that clearly drags booked calls) is a leak. If there's a leak, stop here: the verdict is Don't scale.
-2. **If no leak: do they match the scaling rules?** Check against their level:
-   - Cost per booked call at/under target on the trailing 7 days AND trailing 3 days.
-   - Not 50%+ above normal over the trailing 3 days (that's a refresh, not a scale).
-   - Ad set out of learning, and no budget change in the last 2-3 days (check Meta if access allows; otherwise flag as "verify in Ads Manager").
-   - Enough sample to trust it (not 1-2 booked calls).
-   - Level 2+: a testing ad set exists. Level 2+: ABO, not CBO.
-   - No ROI flag on the last 3 full months (collected 200%+, contracted 400%+), unless it's clearly revenue lag.
-3. **Final verdict:** exactly one of
-   - **✅ Scale:** the next step for their level (e.g. "+20% budget on the main ad set", "add a $100-200/day testing ad set", "promote ad X").
-   - **❌ Don't scale. First fix:** x, y, z (in order, most upstream first, each as Issue → Solution → Tangible Action).
+| Gate | Question | Pass when | If NO |
+|---|---|---|---|
+| 1. Money back | Did ads pay back? | Collected ROI 200%+ and contracted 400%+ over the last 3 full months (clearly lag = note it, can pass) | ❌ Don't scale: more spend = bigger loss |
+| 2. Can they close? | Do booked calls turn into clients? | Show-up and close rate at target on 5+ calls taken (last full month or 3 months; right close rate for 2-step funnels) | ❌ Don't scale: more calls get wasted. Fix show-up / sales first |
+| 3. Cheap enough calls? | Is cost per booked call at target? | CPB at/under target over T7 AND T3, 3+ bookings | ❌ Don't scale yet: the client can close, the ad/page side is the bottleneck. Fix top of funnel |
+| 4. Ready in Meta | Can the ad set take more budget? | Out of learning, no budget change in 2-3 days, not 50%+ above normal CPB over T3 (that's a refresh) | Wait / refresh, then scale |
 
-## Output format
+All 4 pass = ✅ Scale, with the next step for their level (+20% budget, testing ad set, promote ad X).
+Gate 2 passing with gate 3 failing is the "they can close, we just need cheaper calls" case. Gate 3 passing with gate 2 failing is "we're sending calls they can't close": never scale that.
+Non-call funnels (UCA, MS): gate 2 = purchase rate / trial to paid at target, gate 3 = cost per sign-up / paid sub at target.
 
-- Chat tables, **never an artifact**.
-- Per client: level (1/2/3), booked calls/day, cost per booked call (3-day and 7-day vs target), ROI (last full month + last 3 full months, with 🚩 if flagged), the "All bad numbers" line, then the 3 questions above.
-- Every fix uses **Issue → Solution → Tangible Action**. Simple, concrete, no fluff.
-- Every client gets a full, independent write-up. Never "same as above."
-- End every full run with a recap table: client, verdict, first thing to do, number of BAD metrics, ROI flag (🚩 or ok). Include ⚠️ small sample / revenue lag flags.
-- Ema's writing rules apply: no em dashes, no buzzwords, short sentences, specific numbers.
+## Clients with 2+ campaigns (per-campaign breakdown)
+
+Ema says in advance which clients run 2+ campaigns. For those, every run adds a per-campaign split:
+1. Meta: spend, impressions, link clicks per campaign for the window (ads_get_ad_entities, level adset or campaign, time_range).
+2. GHL: contacts for the window (HighLevel search-contacts-advanced, dateAdded range, paginate with searchAfter).
+3. Run `python3 scripts/campaign_split.py --from <date> --to <date> --meta "<utm_campaign>:<label>=<spend>,<impr>,<clicks>" ... <ghl files>`. It prints the chain per campaign side by side (CPM → CTR → LPCR → CPL → prequalified → qualified → booked → cost per booked).
+4. Show-up, close and revenue usually aren't tagged per campaign in GHL: use the sheet's numbers for those and say "shared".
+5. Each campaign gets its own one-line verdict (scale / hold / fix / cut) with the gate that decides it. A campaign with higher CPM has to beat the other on later links by more than that CPM gap.
+
+| Client | Campaigns (label = utm_campaign in GHL) | GHL location |
+|---|---|---|
+| Pacow | OLead = `newmay2026`, OCompleteRegistration = `ocompleteregistration` (launched 2026-10-09) | `0qwvw0jdwrp2PHxMeBiF` |
+
+## Output format (short. Ema knows what every number means: no explanations)
+
+Per client:
+```
+### <Client> · Level <n> · <x> booked/day
+ROI: <last month> collected <c>% / contracted <k>% · 3 months <c>% / <k>% <🚩 or ok>
+
+| Metric (backwards from ROI) | Actual | Baseline | ROI × | Fix |
+|---|---|---|---|---|
+(every row from roi_backwards.py, in order. "Fix" = one short action, only on rows × 1.05+ or BROKEN. DATA gaps as one row: "data gap: <what to fix in the sheet>")
+
+Fix top 2-3 together: ROI <now> → <after>
+
+| Gate | Result |
+|---|---|
+| 1. Money back | ✅/❌ <number> |
+| 2. Can they close | ✅/❌ <show-up>, <close> |
+| 3. Cheap calls | ✅/❌ CPB T7 <x> / T3 <y> vs <target> |
+| 4. Ready in Meta | ✅/❌/not checked |
+
+**✅ Scale: <next step>** or **❌ Don't scale: <gate that failed, in a few words>**
+```
+- Multi-campaign clients: add the campaign split table + one verdict line per campaign.
+- No paragraphs, no "what this means" sections. Tables + one-line fixes + verdict.
+- End the run with the recap table: client · verdict · failed gate · #1 ROI leak (× multiplier) · ROI flag.
+- Chat only, never an artifact. Ema's writing rules: no em dashes, no buzzwords, specific numbers.
 
 ## Client roster
 
