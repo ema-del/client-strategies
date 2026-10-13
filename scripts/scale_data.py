@@ -18,7 +18,7 @@ except ImportError:
     sys.exit("openpyxl missing: run `pip install -q openpyxl` and retry")
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-PCT = {"CTR", "LPCR", "PQ_rate", "Q_rate", "lead_to_booked", "SUP_30", "SUP_60", "close_rate", "ROI_contracted", "ROI_collected"}
+PCT = {"CTR", "LPCR", "PQ_rate", "Q_rate", "lead_to_booked", "SUP_30", "SUP_60", "close_rate", "ROI_contracted", "ROI_collected", "purchase_rate"}
 
 # Column names (row 1 of each month tab). Matched by name so a moved column still works.
 COLS = {
@@ -26,7 +26,9 @@ COLS = {
     "pq": "Pre-Qualified Leads", "q": "Qualified Lead",
     "b30": r"(15|30) Min Calls Booked", "t30": r"(15|30) Calls Taken",
     "b60": "60 Min Calls Booked", "t60": "60 Calls Taken",
-    "new": "New Clients", "rev": "Contracted Revenue", "coll": "Collected Revenue",
+    "new": r"(New Clients|New Sign-Ups|Paid Subs)$", "rev": "Contracted Revenue", "coll": "Collected Revenue",
+    # Subscription funnels (MS): free trial -> paid sub, revenue tracked as new MRR
+    "trial": "Free Trial Starts", "mrr": r"New MRR",
 }
 
 
@@ -70,7 +72,8 @@ def daily_rows(wb):
         for r in ws.iter_rows(min_row=3, values_only=True):
             if not isinstance(r[0], dt.datetime):
                 continue
-            row = {k: num(r[i]) if i < len(r) else 0.0 for k, i in idx.items()}
+            row = {k: 0.0 for k in COLS}
+            row.update({k: num(r[i]) if i < len(r) else 0.0 for k, i in idx.items()})
             row["blank"] = r[idx["spend"]] in (None, "")
             row["note"] = r[notes_i] if notes_i is not None and notes_i < len(r) else None
             out[r[0].date()] = row
@@ -104,7 +107,8 @@ def agg(rows):
         "SUP_30": d(s["t30"], s["b30"]), "SUP_60": d(s["t60"], s["b60"]),
         "cost_per_taken_30": d(s["spend"], s["t30"]), "cost_per_taken_60": d(s["spend"], s["t60"]),
         "close_rate": d(s["new"], taken), "cost_per_client": d(s["spend"], s["new"]),
-        "ROI_contracted": d(s["rev"], s["spend"]), "ROI_collected": d(s["coll"], s["spend"]),
+        "purchase_rate": d(s["new"], s["leads"]), "cost_per_trial": d(s["spend"], s["trial"]),
+        "ROI_contracted": d(s["rev"], s["spend"]), "ROI_collected": d(s["coll"] + s["mrr"], s["spend"]),
         "booked_per_day": round(booked / len(rows), 2) if rows else 0,
     }
 
@@ -130,8 +134,9 @@ TARGET_MAP = [
     (r"^Cost Per 60 Call Taken", "cost_per_taken_60", "t60"),
     (r"^Call Closing Rate", "close_rate", "t30"), (r"^Cost Per New Client", "cost_per_client", "new"),
     (r"^Contracted-ROI", "ROI_contracted", "spend"), (r"^Collected-ROI", "ROI_collected", "spend"),
+    (r"^Purchase Rate", "purchase_rate", "leads"),
 ]
-UNTRACKED_Q = {"cmtc", "sma"}  # Pre-Qualified/Qualified not tracked by design
+UNTRACKED_Q = {"cmtc", "sma", "uca", "ms"}  # no qualification step (by design, or not a call funnel)  # Pre-Qualified/Qualified not tracked by design
 
 
 def parse_target(t):
@@ -140,7 +145,7 @@ def parse_target(t):
     if "Max" in t and len(nums) >= 2:
         return ("cost", nums[0], nums[1])
     if ">" in t and nums:
-        return ("rate", nums[0] / 100, None)
+        return ("rate", nums[0] / 100 if "%" in t else nums[0], None)  # "> 2" = 2x, "> 200%" = 2x
     return None
 
 
@@ -181,7 +186,7 @@ def scorecard(key, wb, month, a, label, top_only=False, uses_60=True):
         if v == "BAD":
             bad.append("Lead-to-qualified")
     lagging = {"SUP_30", "SUP_60", "cost_per_taken_30", "cost_per_taken_60", "close_rate",
-               "cost_per_client", "ROI_contracted", "ROI_collected"}
+               "cost_per_client", "ROI_contracted", "ROI_collected", "purchase_rate"}
     for pat, k, ev in TARGET_MAP:
         if top_only and k in lagging:
             continue  # calls taken / closes / revenue lag the spend: judged on the last full month
@@ -259,7 +264,8 @@ def run(key, path, as_of):
         if not a or a["spend"] <= 0:
             continue
         rc, rl = a["ROI_contracted"] or 0, a["ROI_collected"] or 0
-        flag = "ROI FLAG" if (rl < 2 or rc < 4) else "ok"
+        has_contracted = any(re.match("Contracted-ROI", str(c.value or "")) for c in wb[MONTHS[pm_m - 1]][1])
+        flag = "ROI FLAG" if (rl < 2 or (has_contracted and rc < 4)) else "ok"
         print(f"    {lab}: spend {a['spend']:,.0f} | contracted {a['rev']:,.0f} ({rc * 100:.0f}%) | "
               f"collected {a['coll']:,.0f} ({rl * 100:.0f}%) | clients {a['new']:.0f} -> {flag}")
     # Best historical month for cost per booked (fallback baseline)

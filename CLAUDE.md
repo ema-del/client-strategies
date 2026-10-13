@@ -12,16 +12,16 @@ This routine is **READ-ONLY**. Never write, PUT, POST, or otherwise modify any G
 
 Every "scale" run pulls the full daily data for every client. Do not skip steps, do not use `read_file_content` on the sheets (it only returns the sheet structure, no numbers), and never guess numbers.
 
-**Step 1. Download every workbook (all 8 in one parallel batch).**
+**Step 1. Download every workbook (all 10 in one parallel batch).**
 For each client in the roster, call Google Drive `download_file_content` with:
 - `fileId` = the client's Sheet ID
 - `exportMimeType` = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
 
 This exports the whole workbook (every month tab, daily rows). The result is too big for chat, so the tool saves it to a file and the error message gives the path (`.../tool-results/mcp-Google_Drive-download_file_content-XXXX.txt`). Note each client's path. That's expected, not a failure.
 
-**Step 2. Run the data script once with all 8 files.**
+**Step 2. Run the data script once with all 10 files.**
 ```
-python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> zin=<path> cmtc=<path> pp=<path> c101=<path> nae=<path> sma=<path>
+python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> zin=<path> cmtc=<path> pp=<path> c101=<path> nae=<path> sma=<path> uca=<path> ms=<path>
 ```
 (`openpyxl` is installed by the SessionStart hook in `.claude/settings.json`. If it's missing: `pip install -q openpyxl`.)
 
@@ -44,7 +44,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 
 ### Reading the data
 - **Calls taken lag:** if the script flags calls taken = 0 with bookings > 0, the sheet hasn't been updated yet. Judge show-up on the last full month instead, and say so once.
-- **Template targets:** right now all 8 sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
+- **Template targets:** right now the 8 call-funnel sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
 - **Which booked call counts:** for Pacow, the 60-min call is the real goal (the 30-min call is the first step). For the B2C clients, the 30-min call is the main booking.
 - **Year boundary:** sheets are per year. In early January the T7 window can reach into last year's sheet. If so, say which days are missing.
 - **Fallback targets:** if a target cell is blank, use the client's BEST MONTH from the script. Only then the generic fallback (CPM <$30, CPC <$4, directional only for non-USD accounts).
@@ -184,7 +184,16 @@ Every "scale" run answers 3 questions per client, in this order:
 | c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
 | sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` | Pre-Qualified/Qualified not tracked by design. GBP. |
+| uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
+| ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
-College Zoom is offboarded (2026-09-29). "Smarta Tutoring" and "Much Smarter 1:1 Coaching" (act_1188526852804019) are different companies. Never mix them up.
+College Zoom is offboarded (2026-09-29). "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
+
+### Non-call funnels (UCA, MS)
+These two have no booked calls, so the call-based rules (booked calls/day, cost per booked call, show-up, close rate) don't apply. Judge them on their own chain:
+- **UCA (low-ticket):** CPM → CTR → LPCR → CPL → **new sign-ups** (purchases) → purchase rate (sheet target >70%) → cost per new client (target <$1,000, max $2,000) → **collected ROI** (target >2x).
+- **MS (subscription):** CPM → CTR → LPCR → CPL → **free trial starts** → **paid subs** → cost per paid sub → **new MRR**. ROI = new MRR ÷ spend, flagged under 2x like collected ROI. The sheet has no targets beyond CTR yet: use the generic fallbacks and say so.
+- **Level** for these = paid conversions per day (sign-ups or paid subs) instead of booked calls per day, same thresholds (under 3 / 3-10 / 10+).
+- The script reads both layouts: sign-ups and paid subs count as "new", new MRR counts as collected revenue.
 
 Before writing anything client-facing, check the client's offer (GrowthOS 90-day, Done for you, Coaching only, Course only) in "01. Clients → 00. Client Profiles (Claude)".
