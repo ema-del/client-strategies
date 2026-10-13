@@ -230,7 +230,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | pp | Personalized Prep | act_1747267276471518 | `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` | |
 | c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
-| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` | Pre-Qualified/Qualified not tracked by design. GBP. |
+| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
