@@ -57,6 +57,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 4. **Feed Meta good data.** Only fire the Lead event on qualified opt-ins. As a client scales, optimize for deeper events (qualified booked calls, applications, purchases).
 5. **Budget down rule:** if numbers go south, cut 20%. Never drop back to the starting budget in one go.
 6. **Ad bank:** a scaling client needs new ads built every 1-2 weeks, ready before they're needed. Never rush an ad because a campaign is tanking.
+7. **Never "kill or keep" without branching.** Before recommending turning off a campaign, ad set or ad (or comparing two campaigns), walk ITS funnel stage by stage (CPM → CTR → LPCR → prequalified → survey taken → qualified → booked → show-up → close), side by side with the alternative, and find WHY it's underperforming. If the bottleneck is downstream or shared by both (survey step, show-up, close rate, tracking), the answer is: fix that bottleneck first, then re-judge the campaign on cost per qualified call. Switching campaigns doesn't fix a leak that sits after the opt-in. A kill rule (e.g. 2-3x cost-per-call target with no qualified call) only applies once the funnel behind it is working.
 
 ## Scaling levels (conversion / lead funnels)
 
