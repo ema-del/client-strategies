@@ -179,6 +179,37 @@ All 4 pass = ✅ Scale, with the next step for their level (+20% budget, testing
 Gate 2 passing with gate 3 failing is the "they can close, we just need cheaper calls" case. Gate 3 passing with gate 2 failing is "we're sending calls they can't close": never scale that.
 Non-call funnels (UCA, MS): gate 2 = purchase rate / trial to paid at target, gate 3 = cost per sign-up / paid sub at target.
 
+## Lead-optimized campaigns: 3 checks (replace the 4 gates)
+
+For any campaign **optimizing on the Lead event**, use these 3 checks instead of the 4 gates. Everything else (OSchedule, OCompleteRegistration, purchase, webinar, DM, non-call funnels) keeps the original 4 gates.
+- How to tell: the campaign name starts with "OLead" (O = optimization event), and the Meta ad set's `promoted_object` / `optimization_goal` says Lead. Verify in Meta when the name isn't clear. Known today: Pacow OLead, Smarta OLead.
+- Still run the ROI backwards walk and show the ROI flag. They tell you what to fix. They don't block the verdict for these campaigns.
+
+| Check | Question | Window | Pass when |
+|---|---|---|---|
+| 1. Volume | 10+ leads a day? | T7 | leads ÷ 7 ≥ 10 |
+| 2. Calls | Booked calls AND calls taken? | T7 (last full month if the calls-taken lag flag is on) | both > 0 |
+| 3. Closes | Any closes? | last 30 days | new clients > 0 |
+
+Order:
+1. **Check 1 fails:** is CPL under the sheet's Max (template $45)?
+   - Yes: **the first scaling step is a small budget bump on the existing ad set (+20%, per the playbook)** to reach 10 leads a day. Then check 2 and 3 anyway, and list what fails as the next fix.
+   - No: don't bump. Fix CPL first (page or ads, whichever the ROI walk ranks higher).
+2. **Checks 2 or 3 fail (with check 1 passing):** don't scale. Fix that stage first (booking, show-up, sales, or the sheet if it's a data gap).
+3. **All 3 pass: ✅ scale the campaign.**
+
+**How to scale a Lead campaign:** add NEW ad sets with testing variety (different pain points, angles, formats, audiences), and **stop touching the first ad set**. The goal is many ad sets working at once (about 10), so one winner dropping doesn't take the account down with it. Never edit, add ads to, or rebudget the original winning ad set.
+
+Output for these campaigns: swap the gates table for
+```
+| Check | Result |
+|---|---|
+| 1. 10+ leads/day | ✅/❌ <x>/day · CPL <y> vs max <z> |
+| 2. Booked + taken | ✅/❌ <booked> booked / <taken> taken |
+| 3. Closes | ✅/❌ <n> in 30 days |
+```
+then **✅ Scale: new ad set(s) with <test idea>** or **⬆️ Bump budget +20% (CPL under max), then fix <x>** or **❌ Don't scale: <check that failed>**.
+
 ## Clients with 2+ campaigns (per-campaign breakdown)
 
 Ema says in advance which clients run 2+ campaigns. For those, every run adds a per-campaign split:
