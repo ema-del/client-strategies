@@ -1,6 +1,6 @@
 # Pacow Client Scaling Review
 
-Trigger word: **"scale"**. When Ema says "scale" (optionally + a client name to scope it to one client), run this routine.
+Trigger word: **"scale"**. When Ema says "scale", run this routine on **ALL clients in the roster, every time**. If she names a client, put that client first, but still cover everyone.
 
 This file reuses the rules from the weekly funnel reporting session (`ema-del/business` → `CLAUDE.md`), with one change: the goal is **scaling clients**, not just finding bottlenecks. Every run answers per client: **Is there a funnel leak? If not, do they match the scaling rules? Verdict: Scale, or Don't scale (first fix x, y, z).**
 
@@ -26,17 +26,19 @@ python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> z
 (`openpyxl` is installed by the SessionStart hook in `.claude/settings.json`. If it's missing: `pip install -q openpyxl`.)
 
 Per client the script prints:
-- **ELIGIBLE:** checks the two most recent dated rows up to yesterday. "NO" = skip the client this run.
+- **ELIGIBLE:** checks the two most recent dated rows up to yesterday. "NO" = ads are off: still list the client (one short block: ads off since when, last ROI, what to fix before relaunch). Never drop a client from the run.
 - **TARGETS** from the current month tab.
 - **DAILY last 10 days** (spend / clicks / leads / booked 30 / booked 60 / taken 30 / taken 60, plus notes).
-- **T7** (yesterday and the 6 days before) and **T3** (last 3 days), aggregated from raw counts: CPM, CTR, CPC, LPCR, CPL, pre-qualified and qualified rates, cost per qualified, lead to booked, cost per booked (30, 60, all), show-up, close rate, cost per client, booked calls per day.
+- **T7** (yesterday and the 6 days before), **T14** (yesterday and the 13 days before) and **T3** (last 3 days), aggregated from raw counts: CPM, CTR, CPC, LPCR, CPL, pre-qualified and qualified rates, cost per qualified, lead to booked, cost per booked (30, 60, all), show-up, close rate, cost per client, booked calls per day.
 - **Month history:** current month to date + the last 3 full months.
 - **BEST MONTH** cost per booked call (months with 5+ bookings), the fallback baseline when a target is blank.
 - **FLAG** when calls taken = 0 but bookings > 0 in T7.
-- **SCORECARD T7** (top of funnel: CTR, LPCR, CPL, lead-to-qualified, cost per booked) and **SCORECARD last full month** (every metric with a sheet target, including show-up, cost per call taken, close rate, cost per client, ROI). Each line says Good / Borderline / BAD, then an **ALL BAD** line.
+- **SCORECARD T7** and **SCORECARD T14** (top of funnel: CTR, LPCR, CPL, lead-to-qualified, cost per booked) and **SCORECARD last full month** (every metric with a sheet target, including show-up, cost per call taken, close rate, cost per client, ROI). Each line says Good / Borderline / BAD, then an **ALL BAD** line.
 - **ROI CHECK** for the last full month, the last 3 full months and year to date, with **ROI FLAG** when collected ROI is under 200% or contracted ROI is under 400%.
 
 The windows end **yesterday**, because today's row is usually incomplete.
+
+**Always review BOTH the last 7 days AND the last 14 days**, for every client, every run. Show both numbers side by side (e.g. "CPB T7 $204 / T14 $126") and judge both. When they disagree, say which way it's trending (T7 better than T14 = improving, worse = getting worse). T3 is only for the refresh check.
 
 **Step 3. Only if a download fails** for a client: retry that one once. If it still fails, say so for that client and carry on with the rest. Never fill gaps with guesses.
 
@@ -172,7 +174,7 @@ The ROI walk says where money leaks. The gates say whether more budget would mak
 |---|---|---|---|
 | 1. Money back | Did ads pay back? | Collected ROI 200%+ and contracted 400%+ over the last 3 full months (clearly lag = note it, can pass) | ❌ Don't scale: more spend = bigger loss |
 | 2. Can they close? | Do booked calls turn into clients? | Show-up and close rate at target on 5+ calls taken (last full month or 3 months; right close rate for 2-step funnels) | ❌ Don't scale: more calls get wasted. Fix show-up / sales first |
-| 3. Cheap enough calls? | Is cost per booked call at target? | CPB at/under target over T7 AND T3, 3+ bookings | ❌ Don't scale yet: the client can close, the ad/page side is the bottleneck. Fix top of funnel |
+| 3. Cheap enough calls? | Is cost per booked call at target? | CPB at/under target over T7 AND T14 (3+ bookings each), and T3 not 50%+ above normal | ❌ Don't scale yet: the client can close, the ad/page side is the bottleneck. Fix top of funnel |
 | 4. Ready in Meta | Can the ad set take more budget? | Out of learning, no budget change in 2-3 days, not 50%+ above normal CPB over T3 (that's a refresh) | Wait / refresh, then scale |
 
 All 4 pass = ✅ Scale, with the next step for their level (+20% budget, testing ad set, promote ad X).
@@ -182,13 +184,13 @@ Non-call funnels (UCA, MS): gate 2 = purchase rate / trial to paid at target, ga
 ## Lead-optimized campaigns: 3 checks (replace the 4 gates)
 
 For any campaign **optimizing on the Lead event**, use these 3 checks instead of the 4 gates. Everything else (OSchedule, OCompleteRegistration, purchase, webinar, DM, non-call funnels) keeps the original 4 gates.
-- How to tell: the campaign name starts with "OLead" (O = optimization event), and the Meta ad set's `promoted_object` / `optimization_goal` says Lead. Verify in Meta when the name isn't clear. Known today: Pacow OLead, Smarta OLead.
+- How to tell: every run, check **every live campaign in every client's ad account** in Meta (ad set `optimization_goal` / `promoted_object`). A name starting with "OLead" (O = optimization event) is a hint, not proof. Never assume a fixed list. EdvancedLearning and Class101 are MCP-blocked: go by name and write "verify in Ads Manager".
 - Still run the ROI backwards walk and show the ROI flag. They tell you what to fix. They don't block the verdict for these campaigns.
 
 | Check | Question | Window | Pass when |
 |---|---|---|---|
-| 1. Volume | 10+ leads a day? | T7 | leads ÷ 7 ≥ 10 |
-| 2. Calls | Booked calls AND calls taken? | T7 (last full month if the calls-taken lag flag is on) | both > 0 |
+| 1. Volume | 10+ leads a day? | T7 and T14 | leads ÷ days ≥ 10 in both (report both) |
+| 2. Calls | Booked calls AND calls taken? | T7 and T14 (last full month if the calls-taken lag flag is on) | both > 0 |
 | 3. Closes | Any closes? | last 30 days | new clients > 0 |
 
 Order:
@@ -204,7 +206,7 @@ Output for these campaigns: swap the gates table for
 ```
 | Check | Result |
 |---|---|
-| 1. 10+ leads/day | ✅/❌ <x>/day · CPL <y> vs max <z> |
+| 1. 10+ leads/day | ✅/❌ T7 <x>/day · T14 <x>/day · CPL <y> vs max <z> |
 | 2. Booked + taken | ✅/❌ <booked> booked / <taken> taken |
 | 3. Closes | ✅/❌ <n> in 30 days |
 ```
@@ -240,7 +242,7 @@ Fix top 2-3 together: ROI <now> → <after>
 |---|---|
 | 1. Money back | ✅/❌ <number> |
 | 2. Can they close | ✅/❌ <show-up>, <close> |
-| 3. Cheap calls | ✅/❌ CPB T7 <x> / T3 <y> vs <target> |
+| 3. Cheap calls | ✅/❌ CPB T7 <x> / T14 <y> (T3 <z>) vs <target> |
 | 4. Ready in Meta | ✅/❌/not checked |
 
 **✅ Scale: <next step>** or **❌ Don't scale: <gate that failed, in a few words>**

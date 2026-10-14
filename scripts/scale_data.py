@@ -220,6 +220,7 @@ def run(key, path, as_of):
     print("ELIGIBLE:", "yes" if live else "NO (last 2 rows $0/blank, skip)")
     t7 = [days[end - dt.timedelta(days=i)] for i in range(6, -1, -1) if end - dt.timedelta(days=i) in days]
     t3 = t7[-3:]
+    t14 = [days[end - dt.timedelta(days=i)] for i in range(13, -1, -1) if end - dt.timedelta(days=i) in days]
     print("TARGETS (current month tab):", targets(wb, MONTHS[end.month - 1]))
     print("DAILY last 10 (date: spend/clicks/leads/booked30/booked60/taken30/taken60):")
     for d in sorted(x for x in days if x <= end)[-10:]:
@@ -228,6 +229,7 @@ def run(key, path, as_of):
               + (f"  note: {r['note']}" if r["note"] else ""))
     print("T7:", fmt(agg(t7)))
     print("T3:", fmt(agg(t3)))
+    print("T14:", fmt(agg(t14)))
     taken_lag = sum(r["t30"] + r["t60"] for r in t7) == 0 and sum(r["b30"] + r["b60"] for r in t7) > 0
     if taken_lag:
         print("FLAG: calls taken = 0 in T7 with bookings > 0. Likely not filled in yet. Judge show-up on last full month.")
@@ -245,6 +247,7 @@ def run(key, path, as_of):
     recent90 = [r for d, r in days.items() if end - dt.timedelta(days=90) <= d <= end]
     uses_60 = sum(r["b60"] for r in recent90) > 0
     scorecard(key, wb, cur, agg(t7), "T7", top_only=True, uses_60=uses_60)
+    scorecard(key, wb, cur, agg(t14), "T14", top_only=True, uses_60=uses_60)
     pm_y, pm_m = (end.year, end.month - 1) if end.month > 1 else (end.year - 1, 12)
     last_full = [r for d, r in days.items() if d.year == pm_y and d.month == pm_m]
     if last_full:
@@ -286,7 +289,8 @@ if __name__ == "__main__":
     a = ap.parse_args()
     as_of = dt.date.fromisoformat(a.as_of)
     print(f"As of {as_of}. T7 = {as_of - dt.timedelta(days=7)} to {as_of - dt.timedelta(days=1)}, "
-          f"T3 = {as_of - dt.timedelta(days=3)} to {as_of - dt.timedelta(days=1)}")
+          f"T3 = {as_of - dt.timedelta(days=3)} to {as_of - dt.timedelta(days=1)}, "
+          f"T14 = {as_of - dt.timedelta(days=14)} to {as_of - dt.timedelta(days=1)}")
     for f in a.files:
         k, p = f.split("=", 1)
         try:
