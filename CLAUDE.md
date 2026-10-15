@@ -277,3 +277,61 @@ These two have no booked calls, so the call-based rules (booked calls/day, cost 
 - The script reads both layouts: sign-ups and paid subs count as "new", new MRR counts as collected revenue.
 
 Before writing anything client-facing, check the client's offer (GrowthOS 90-day, Done for you, Coaching only, Course only) in "01. Clients → 00. Client Profiles (Claude)".
+
+## Monday and Wednesday SOPs (manual triggers)
+
+Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the matching SOP below on **all clients** unless she names specific ones. These are separate from "scale", but reuse its data steps (step 1 + 2 above for the sheets, Meta ad and ad set level for the last 7 days, GHL contacts by campaign and utm_content for bookings per ad). Source docs: "01. Funnel Reporting" (`1oyWcajslO508zTx_XVAvcOVGw4kgADIcRdZ-ySN5jsQ`) and "02. Media Buying" (`1vn4Gd-ye4jeFymHJrRuN1eTeQRBGasDI7nJvpKLiKT0`). If those docs change, follow the docs.
+
+Read only, as always: findings and actions for Ema, never live changes.
+
+**Output format for both:** per client, the SOP's steps in order, each as one line: **step → what I found (numbers, T7 and T14) → what to do**. Plain steps a person would follow. No tool or login steps. Mark accounts 🟢 / 🔴 / data gap. End with a short "do this week" list across all clients. Ema's writing rules apply.
+
+### MONDAY: Funnel Review (diagnose, don't fix live)
+
+**Block 1: Scan every account.** Read 5 numbers per client, last 7 and 14 days:
+1. Cost per booked call vs target (Pacow: the 60-min call).
+2. Leads add up: Meta Lead count vs GHL opt-ins for the same campaign and dates. First check what the Lead event should fire on (every opt-in or prequalified only) and compare against that. Within 15% = fine. Instant-form clients without GHL: compare Meta with the sheet.
+3. Show rate vs target, per call type.
+4. Closes and cash this week (clients, contracted, collected).
+5. Sheet filled in up to yesterday (calls taken, clients, revenue). Missing = data gap, not red.
+
+Mark 🟢 (all on target: flag "scale Wednesday", note which ad set works and its headroom), 🔴 (anything off: Block 2), or data gap (ask client/VA to fill it, judge next Monday).
+
+**Block 2: Deep-dive red accounts only.**
+1. Tracking first. Broken = that's the fix, log it, move on.
+2. Walk the ladder: leads → bookings → shows → pitches → closes, number and % at each step.
+3. Stop at the first big drop: leads, no bookings → page/VSL or speed to lead · bookings, no shows → SMS/email reminders + confirmation call · shows, no pitches → survey/call opening · pitches, no closes → sales (AI grader).
+4. Assign it: VA brief or note to Viktorija (what's broken, the number, the fix).
+
+**Block 3: Loose ends.**
+1. Red accounts not reached → next Monday or hand clear ones to a VA.
+2. Check last week's fixes actually shipped (look at the page, ad, automation).
+3. Same leak in 2+ accounts = SOP gap: one template, rolled out everywhere.
+4. Odd sheet data (numbers moving between months, revenue disappearing) → ask who changed it.
+
+Rules: one leak per account per week. More than 4 red → worst 4, push the rest. A Lead campaign can be red Monday and still pass the 3 Lead checks Wednesday: then scale and fix the leak in parallel.
+
+### WEDNESDAY: Media Buying + New Ads
+
+Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → ask the client, or judge on CPL only and say so.
+
+**Block 1: Buying.**
+- Tracking gate: use Monday's result. Broken → judge on GHL numbers, not Meta's.
+- Kill (ad level, last 7 days): fresh ad (under $350) with CPL over target and 0 bookings → KILL. Mature ad with cost per booking over target and weak close → KILL (booking ads get a 2-3x cost-per-call window first). Check every ad "with issues" or rejected. Before killing a whole campaign, walk its ladder next to the alternative (core rule 7).
+- Scale, Lead campaigns: the 3 Lead checks (10+ leads/day per ad set, booked + taken, 1+ close in 30 days), T7 and T14. All yes → duplicate the winner into a NEW ad set with a new test, never touch the original, aim for about 10 ad sets. Check 1 no + CPL under max → +20% budget. CPL at/over max → no bump, fix CPL. Check 2 or 3 no → fix that step.
+- All ad sets: frequency over 1.5 on cold → new ad set, not more budget. Raise budget only if CPL stays flat. Scheduled campaigns keep their rules (about 3 booked/day per ad set, $200-500/day).
+
+**Block 2: Create ads.**
+1. Ad with the most booked calls (GHL). Tie → lower cost per booking. Note format, angle, pain.
+2. Lock format + offer + winning pain. Swap the angle only.
+3. Winner + 5 new angles → 5 scripts (offer to write them).
+4. New batch goes into a fresh test ad set at about $50/day. Never into the winning ad set (flag any new ads found inside a winner: they starve).
+5. Log what went live (ad set, angles, date) for next Wednesday.
+
+### Decision rules (both days)
+- No bookings yet (fresh, under $350) → judge on CPL. Enough spend to book → judge on cost per booking. CPL = early gate, cost per booking = verdict.
+- CPL kills fresh ads, cost per booking kills mature ads. Kill on Wednesday only.
+- Default scale = new ad set. More budget only if CPL stays flat. 10 leads/day per ad set = spin a new one.
+- Lead campaigns learn at about 10 leads/day per ad set, scale by stacking ad sets. Scheduled campaigns learn at about 3 booked calls/day per ad set.
+- Always T7 and T14 side by side (T7 better = improving). T3 only for sudden drops.
+- Missing calls taken / clients / revenue = data gap, not a result.
