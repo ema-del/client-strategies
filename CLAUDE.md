@@ -1,6 +1,8 @@
 # Pacow Client Scaling Review
 
-Trigger word: **"scale"**. When Ema says "scale", run this routine on **ALL clients in the roster, every time**. If she names a client, put that client first, but still cover everyone.
+Triggers: **"monday"** (funnel review) and **"wednesday"** (media buying + scaling). Ema prompts them manually. "Scale" is no longer a separate run: it is part of Wednesday. If Ema types "scale", run Wednesday. Every run covers **ALL clients in the roster**. If she names a client, put that client first, but still cover everyone (unless she says "only").
+
+Everything below (data steps, ROI walk, gates, Lead checks, bad numbers, ROI flag, client recaps) is the toolkit both days use. The day-by-day steps and output formats are in "Monday and Wednesday SOPs" at the end.
 
 This file reuses the rules from the weekly funnel reporting session (`ema-del/business` → `CLAUDE.md`), with one change: the goal is **scaling clients**, not just finding bottlenecks. Every run answers per client: **Is there a funnel leak? If not, do they match the scaling rules? Verdict: Scale, or Don't scale (first fix x, y, z).**
 
@@ -214,7 +216,7 @@ then **✅ Scale: new ad set(s) with <test idea>** or **⬆️ Bump budget +20% 
 
 ## Clients with 2+ campaigns (per-campaign breakdown)
 
-Ema says in advance which clients run 2+ campaigns. For those, every run adds a per-campaign split:
+Any client with 2+ live campaigns in Meta (check every account, every Wednesday; Ema may also name them) gets a per-campaign split:
 1. Meta: spend, impressions, link clicks per campaign for the window (ads_get_ad_entities, level adset or campaign, time_range).
 2. GHL: contacts for the window (HighLevel search-contacts-advanced, dateAdded range, paginate with searchAfter).
 3. Run `python3 scripts/campaign_split.py --from <date> --to <date> --meta "<utm_campaign>:<label>=<spend>,<impr>,<clicks>" ... <ghl files>`. It prints the chain per campaign side by side (CPM → CTR → LPCR → CPL → prequalified → qualified → booked → cost per booked).
@@ -225,7 +227,7 @@ Ema says in advance which clients run 2+ campaigns. For those, every run adds a 
 |---|---|---|
 | Pacow | OLead = `newmay2026`, OCompleteRegistration = `ocompleteregistration` (launched 2026-10-09) | `0qwvw0jdwrp2PHxMeBiF` |
 
-## Output format (short. Ema knows what every number means: no explanations)
+## Client block format (reused inside Monday Block 2 and Wednesday scaling. Ema knows what every number means: no explanations)
 
 Per client:
 ```
@@ -280,11 +282,80 @@ Before writing anything client-facing, check the client's offer (GrowthOS 90-day
 
 ## Monday and Wednesday SOPs (manual triggers)
 
-Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the matching SOP below on **all clients** unless she names specific ones. These are separate from "scale", but reuse its data steps (step 1 + 2 above for the sheets, Meta ad and ad set level for the last 7 days, GHL contacts by campaign and utm_content for bookings per ad). Source docs: "01. Funnel Reporting" (`1oyWcajslO508zTx_XVAvcOVGw4kgADIcRdZ-ySN5jsQ`) and "02. Media Buying" (`1vn4Gd-ye4jeFymHJrRuN1eTeQRBGasDI7nJvpKLiKT0`). If those docs change, follow the docs.
+Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the matching SOP on **all clients**. Source docs: "01. Funnel Reporting" (`1oyWcajslO508zTx_XVAvcOVGw4kgADIcRdZ-ySN5jsQ`) and "02. Media Buying" (`1vn4Gd-ye4jeFymHJrRuN1eTeQRBGasDI7nJvpKLiKT0`). If those docs change, follow the docs.
 
 Read only, as always: findings and actions for Ema, never live changes.
 
-**Output format for both:** per client, the SOP's steps in order, each as one line: **step → what I found (numbers, T7 and T14) → what to do**. Plain steps a person would follow. No tool or login steps. Mark accounts 🟢 / 🔴 / data gap. End with a short "do this week" list across all clients. Ema's writing rules apply.
+**Data pull (both days, before anything else):**
+1. All 10 workbooks + `scale_data.py` + `roi_backwards.py` (Data source steps 1-3). Always T7 and T14.
+2. Meta, every account: ad set level (budget, optimization goal, learning status, last edit, frequency, leads) and ad level (spend, clicks, leads, frequency, status incl. "with issues"), last 7 days. An account flagged "unqueryable" can still answer: try it before giving up.
+3. GHL, every client on GHL: contacts for the last 7 and 14 days, split by campaign and utm_content (ad), with tags for prequalified / qualified / booked. This gives leads and bookings per campaign and per ad. Clients without GHL (Core Medical uses its own CRM): say "bookings per ad not tracked".
+4. Tracking check: Meta Lead count vs GHL opt-ins for the same campaign and dates. Find out what the Lead event should fire on before calling it broken.
+
+### MONDAY output (thorough)
+Per client:
+1. Header: 🟢 / 🔴 / data gap · Level · booked/day T7 / T14 · ROI line (last month + 3 months, 🚩 rules).
+2. **Scan table**: the 5 numbers (cost per booked, leads add up, show rate, closes + cash, sheet filled) · T7 · T14 · target · status.
+3. Red accounts, **deep-dive**:
+   - Tracking line (Meta vs GHL, what the event fires on).
+   - **Ladder table**: leads → bookings → shows (per call type) → pitches → closes, number and % at each step, T7 and T14. Bold the first big drop.
+   - **ROI backwards table** (client block format above), "fix top 2-3 together", DATA notes as data-gap rows.
+   - **All bad numbers** line: root cause, symptoms, independent problems.
+   - The one leak + who it's assigned to (VA brief / Viktorija) + the fix.
+4. **Loose ends**: last week's fixes shipped or not, repeating leaks across accounts (SOP gaps), odd sheet data.
+
+End of Monday, in this order:
+- **Recap table**: client · 🟢/🔴/gap · the one leak · #1 ROI leak (×) · ROI flag.
+- **Ema's priority list**: clients ordered by fastest money, each with its fixes in order and short "try:" hints (Ema decides the rest).
+- **Client recaps** (drafts, never sent): see "Client recaps" below.
+
+### WEDNESDAY output (thorough, includes scaling)
+Per client:
+1. **Tracking gate** line (from Monday, or re-checked).
+2. **Kill table**, ad level, last 7 days: ad · spend · leads (GHL) · booked · CPL · cost per booking · fresh/mature · verdict (KILL / keep / watch). Plus every ad "with issues" or rejected.
+3. **Campaign split** for clients with 2+ live campaigns (`campaign_split.py`), one verdict line per campaign.
+4. **Scale decision**:
+   - Lead campaigns: the 3 Lead checks table (T7 and T14) → ✅ new ad set / ⬆️ +20% bump / ❌ fix X.
+   - Other campaigns: the 4 gates table (client block format).
+   - Either way, show the ROI line and ROI × of the top leak, so a scale call is always checked against the chain.
+5. **Ad set table**: ad set · budget · leads/day T7 · frequency · learning · last edit · action (duplicate into new ad set / leave alone / bump / cut 20%).
+6. **Create ads**: the winner (most GHL bookings, tie = cheaper cost per booking), what's locked (format, offer, pain), the 5 new angles written out, where they go (fresh test ad set, about $50/day). Flag any new ads sitting inside a winning ad set.
+
+End of Wednesday:
+- **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
+- **Do this week** list for Ema, ordered by fastest money.
+
+### Client recaps (Monday, drafts only)
+Per client, for the client to read (they don't know what the numbers mean):
+- **Good news** (2-3 bullets) and **Bad news** (2-3 bullets), with a little context in plain words ("only 4 of every 100 people who click sign up").
+- **How to get ROI** (1-2 bullets).
+- **Action items** (their side only).
+- Then the roadmap reminder, with that client's roadmap link:
+
+  There are other outstanding tasks in your roadmap, here: <roadmap link>
+
+  Remember: you've invested in learning how to run these ads, and that starts with watching the course modules on time, before coaching, so you can apply it to your own ads.
+
+Check the offer first (Client Profiles folder). Course reminder only for clients with course modules (GrowthOS 90-day / DWY). Done-for-you (Smarta): no course reminder. No client recap for Pacow (that's us).
+
+| Client | Offer | Roadmap |
+|---|---|---|
+| Zinkerz | DWY | https://docs.google.com/spreadsheets/d/1FHTdV6aVx3WhQI94B6Olwu56Ye2pYUbfpbjCFfoEACU/edit |
+| Core Medical | DWY | https://docs.google.com/spreadsheets/d/1KnyguY1I_UQ7pvuJ4CEmMozZ-l7n2sG3lXTpU8mSf-I/edit |
+| Personalized Prep | DWY | https://docs.google.com/spreadsheets/d/1ydOARWLGTq1ZpkSUPqq3mRG5mm5DxVDlPhT3Z-i32Sw/edit |
+| Class101 | DWY | https://docs.google.com/spreadsheets/d/1xXsQNLAYVsjGMT5mk7EFN2ngHQo4NfvN-7T9xFTWPGM/edit |
+| North Ave | DWY | https://docs.google.com/spreadsheets/d/1ogYZOegjmxZQyCgq4ZQWLbbwazq1rYtgaagC5fehwoc/edit |
+| EdvancedLearning | DWY | https://docs.google.com/spreadsheets/d/1vL985jrMiUlWDNjRLRiGEk66cUuDunX1fyyeu_WSDU4/edit |
+| UCA | GrowthOS roadmap exists, no profile (confirm offer) | https://docs.google.com/spreadsheets/d/1qHAz-eOS9y7jefjKCFWYJGCo9vQktA-u1vQ2mQrTP4I/edit |
+| Smarta | DFY: no course reminder | none |
+| Much Smarter | unknown: ask Ema | none found |
+
+### Learnings from the trial runs (apply every time)
+- Sheets can lag or change between runs: re-download every run, never reuse old numbers, and say when numbers moved.
+- Check which campaigns the sheet counts (Pacow's sheet = OLead only).
+- Never assume a campaign list: read every account in Meta.
+- New ads inside a winning ad set starve: always flag them.
+- An account with ads off still gets a short block (since when, last ROI, fix before relaunch).
 
 ### MONDAY: Funnel Review (diagnose, don't fix live)
 
