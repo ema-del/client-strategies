@@ -49,7 +49,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 ### Reading the data
 - **Calls taken lag:** if the script flags calls taken = 0 with bookings > 0, the sheet hasn't been updated yet. Judge show-up on the last full month instead, and say so once.
 - **Template targets:** right now the 8 call-funnel sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
-- **Cost per qualified call target:** the sheets have no target for it yet. Until Ema sets one per client, use the sheet's Cost Per 30 Booked target ($150, max $300) as a stand-in and say so once per run. CAC target = the sheet's Cost Per New Client target ($1,000, max $2,000).
+- **Kill/scale targets:** cost per booked call target = the sheet's Cost Per 30 Booked ($150, max $300; Pacow: Cost Per 60 Booked $250). CAC target = the sheet's Cost Per New Client ($1,000, max $2,000). We don't track cost per qualified call: never use it.
 - **Which booked call counts:** for Pacow, the 60-min call is the real goal (the 30-min call is the first step). For the B2C clients, the 30-min call is the main booking.
 - **Year boundary:** sheets are per year. In early January the T7 window can reach into last year's sheet. If so, say which days are missing.
 - **Fallback targets:** if a target cell is blank, use the client's BEST MONTH from the script. Only then the generic fallback (CPM <$30, CPC <$4, directional only for non-USD accounts).
@@ -57,12 +57,12 @@ The windows end **yesterday**, because today's row is usually incomplete.
 ## Core scaling rules (from the playbook)
 
 1. **Fix the funnel before the ads.** "Great ads pouring into a leaky funnel still won't make you money." If anything upstream is broken, the action is a fix, not a budget increase.
-2. **Judge on the deepest number with enough data: sales → cost per qualified call → cost per booked call. Never CPL.** "You'd rather have a $40 CPL and low cost per booking than $4 CPL." (Matt, 2026-10-15: CPL barely matters when most leads book.) Qualified call = a booked call from a qualified lead (GHL: booked + "meta | qualified lead"). Clients that don't track qualified (Core Medical, Smarta): use cost per booked call and say so.
+2. **Judge on sales first, then cost per booked call. Never CPL.** "You'd rather have a $40 CPL and low cost per booking than $4 CPL." (Matt, 2026-10-15: CPL barely matters when most leads book.) We don't track cost per qualified call, so it's never used.
 3. **Leave winners alone.** Untouched winning ads stay consistent. Find winners by checking **utm_content** in GHL for each booked call (webinars: the H AD ID on the form submission).
 4. **Feed Meta good data.** Only fire the Lead event on qualified opt-ins. As a client scales, optimize for deeper events (qualified booked calls, applications, purchases).
 5. **Budget down rule:** if numbers go south, cut 20%. Never drop back to the starting budget in one go.
 6. **Ad bank:** a scaling client needs new ads built every 1-2 weeks, ready before they're needed. Never rush an ad because a campaign is tanking.
-7. **Never "kill or keep" without branching.** Before recommending turning off a campaign, ad set or ad (or comparing two campaigns), walk ITS funnel stage by stage (CPM → CTR → LPCR → prequalified → survey taken → qualified → booked → show-up → close), side by side with the alternative, and find WHY it's underperforming. If the bottleneck is downstream or shared by both (survey step, show-up, close rate, tracking), the answer is: fix that bottleneck first, then re-judge the campaign on cost per qualified call. Switching campaigns doesn't fix a leak that sits after the opt-in. A kill rule (e.g. 2-3x cost-per-call target with no qualified call) only applies once the funnel behind it is working.
+7. **Never "kill or keep" without branching.** Before recommending turning off a campaign, ad set or ad (or comparing two campaigns), walk ITS funnel stage by stage (CPM → CTR → LPCR → prequalified → survey taken → qualified → booked → show-up → close), side by side with the alternative, and find WHY it's underperforming. If the bottleneck is downstream or shared by both (survey step, show-up, close rate, tracking), the answer is: fix that bottleneck first, then re-judge the campaign on cost per booked call. Switching campaigns doesn't fix a leak that sits after the opt-in. A kill rule (e.g. 2-3x cost-per-booked target with no booked call) only applies once the funnel behind it is working.
 
 ## Scaling levels (conversion / lead funnels)
 
@@ -93,7 +93,7 @@ Set each client's level from booked calls per day (trailing 7 days).
 - Then +20% every 2-3 days, in the morning. If things go south, drop 20%.
 
 **IG follower / remix scaling**
-- Find the pain point booking the cheapest qualified calls. Build 5 new ads around it (new angles first, then new formats or awareness levels).
+- Find the pain point booking the cheapest calls. Build 5 new ads around it (new angles first, then new formats or awareness levels).
 - Launch them in a **new ad set** at $50-100/day next to the winner. Never add ads into a winning ad set.
 
 **Webinars / challenges**
@@ -313,20 +313,21 @@ End of Monday, in this order:
 ### WEDNESDAY output (thorough, includes scaling)
 Per client:
 1. **Tracking gate** line (from Monday, or re-checked).
-2. **Kill table**, ad level, last 7 days: ad · spend · leads (GHL) · booked · qualified calls · cost per qualified call · cost per booking · sales · spend vs the 2x-CPQ / 2-3x-CAC windows · verdict (KILL / keep / watch). Plus every ad "with issues" or rejected.
+2. **Kill table**, ad level, last 7 days: ad · spend · leads (GHL) · booked · cost per booking · sales · spend vs the 2x-CPB / 2-3x-CAC windows · verdict (KILL / keep / watch). Plus every ad "with issues" or rejected.
 3. **Campaign split** for clients with 2+ live campaigns (`campaign_split.py`), one verdict line per campaign.
 4. **Scale decision**:
    - Lead campaigns: the 3 Lead checks table (T7 and T14) → ✅ new ad set / ⬆️ +20% bump / ❌ fix X.
    - Other campaigns: the 4 gates table (client block format).
    - Either way, show the ROI line and ROI × of the top leak, so a scale call is always checked against the chain.
 5. **Ad set table**: ad set · budget · leads/day T7 · frequency · learning · last edit · action (duplicate into new ad set / leave alone / bump / cut 20%).
-6. **Create ads**: the winner (sales → cost per qualified call → cost per booked call, say which rung), what's locked (format, offer, pain), the 5 new angles written out, where they go (fresh test ad set, about $50/day). Flag any new ads sitting inside a winning ad set.
+6. **Create ads**: the winner (sales → cost per booked call, say which one), what's locked (format, offer, pain), the 5 new angles written out, where they go (fresh test ad set, about $50/day). Flag any new ads sitting inside a winning ad set.
 
 End of Wednesday:
 - **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
 - **Do this week** list for Ema, ordered by fastest money.
+- **Client recaps** (drafts, never sent), same format as Monday, focused on this week's ad changes: what's working, what's getting cut or scaled, what they need to do.
 
-### Client recaps (Monday, drafts only)
+### Client recaps (end of Monday AND Wednesday, drafts only)
 Per client, for the client to read (they don't know what the numbers mean):
 - **Good news** (2-3 bullets) and **Bad news** (2-3 bullets), with a little context in plain words ("only 4 of every 100 people who click sign up").
 - **How to get ROI** (1-2 bullets).
@@ -361,7 +362,7 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 ### MONDAY: Funnel Review (diagnose, don't fix live)
 
 **Block 1: Scan every account.** Read 5 numbers per client, last 7 and 14 days:
-1. Cost per qualified call vs target (no qualified tracking or no target → cost per booked call; Pacow: the 60-min call).
+1. Cost per booked call vs target (Pacow: the 60-min call).
 2. Leads add up: Meta Lead count vs GHL opt-ins for the same campaign and dates. First check what the Lead event should fire on (every opt-in or prequalified only) and compare against that. Within 15% = fine. Instant-form clients without GHL: compare Meta with the sheet.
 3. Show rate vs target, per call type.
 4. Closes and cash this week (clients, contracted, collected).
@@ -390,7 +391,7 @@ Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → as
 **Block 1: Buying.**
 - Tracking gate: use Monday's result. Broken → judge on GHL numbers, not Meta's.
 - Kill (ad level, Matt's rule):
-  1. Judge on **cost per qualified call** first. Spend at least **2x the cost-per-qualified-call target** on the ad before judging (target $250 → $500).
+  1. Judge on **cost per booked call**. Spend at least **2x the cost-per-booked target** on the ad before judging (target $150 → $300).
   2. Over target at that spend → KILL.
   3. In target → keep it until **2-3x the CAC target** (cost per new client target, e.g. $1,500 → $3k) before killing it for no sales.
   4. CPL only matters if leads aren't booking (lead to booked weak). Then a fresh ad with high CPL and 0 bookings can go early.
@@ -401,15 +402,15 @@ Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → as
 - All ad sets: frequency over 1.5 on cold → new ad set, not more budget. Raise budget only if CPL stays flat.
 
 **Block 2: Create ads.**
-1. Pick the winner up the chain: **most sales** → if not enough sales, **cheapest cost per qualified call** → if not enough qualified calls, **cheapest cost per booked call** (GHL utm_content). Say which rung you used. Note format, angle, pain.
+1. Pick the winner: **most sales** → if not enough sales, **cheapest cost per booked call** (GHL utm_content). Say which one you used. Note format, angle, pain.
 2. Lock format + offer + winning pain. Swap the angle only.
 3. Winner + 5 new angles → 5 scripts (offer to write them).
 4. New batch goes into a fresh test ad set at about $50/day. Never into the winning ad set (flag any new ads found inside a winner: they starve).
 5. Log what went live (ad set, angles, date) for next Wednesday.
 
 ### Decision rules (both days)
-- Success and kills: cost per qualified call first (judge after 2x its target in spend), then keep winners until 2-3x CAC before killing for no sales. Cost per booked call only when qualified isn't tracked. CPL only matters when leads don't book. Kill on Wednesday only.
-- New ads are built from: sales → cost per qualified call → cost per booked call.
+- Success and kills: cost per booked call (judge after 2x its target in spend), then keep winners until 2-3x CAC before killing for no sales. CPL only matters when leads don't book. Kill on Wednesday only.
+- New ads are built from: sales → cost per booked call.
 - Default scale = new ad set. More budget only if CPL stays flat. Inside a triggered ad set: kill losers only, never add ads.
 - Ad set trigger = event fires per day: about 10 for Lead, 3-5 for Schedule. Same logic for both.
 - Always T7 and T14 side by side (T7 better = improving). T3 only for sudden drops.
