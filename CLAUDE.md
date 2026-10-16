@@ -101,6 +101,9 @@ Set each client's level from booked calls per day (trailing 7 days).
 - Cost per registration good: raise budget **20-50% per day** (up to 100% if numbers are strong). Not good: kill weak ads, shift budget, add new ads.
 - Fix checks after each webinar: landing page under 20% → fix the page. Show rate under 30% → fix reminders. Judge lead quality only after $3-5k spent and 50-100+ people live.
 - Scale by frequency: monthly → every other week → weekly. Never put a specific date in ad copy.
+- **Webinar creative rule (Skool, Ema 2026-10-16): HUGE variety, always.** At least 10 genuinely different ads (about 3 pain points × 2-3 creative styles), no near-duplicates. Under 20 registrations/day: 1 campaign, 1 ad set, 10-20 ads. Over 20/day: ABO ad sets by creative style or by pain point, 5-10 ads each, $100-200 each; duplicate winning ad sets with a small audience tweak. Bad cost per registration: kill weak ads, shift budget, add new ads ASAP. Starting budget $100/day B2C, $250 B2B. Goal 200-400 registered to get 50+ live.
+- **This overrides Matt's "never add ads to the ad set" for webinar/registration campaigns.** Matt's rule applies to Lead and booking campaigns with a proven winner.
+- Webinar volume outside ads: 20-100 invites/day (200 invites ≈ 30 live), reminder sequence with SMS, 72-hour replay, next-day DM to attendees and no-shows, VIP upsell (half-off paid consultation) on the thank-you page.
 
 **"Hammer Them" retargeting (recommend once a client has steady leads)**
 - Awareness objective, CBO, **$1/day per ad set** (5+ ad sets), max reach, frequency cap 1 per 5-7 days.
