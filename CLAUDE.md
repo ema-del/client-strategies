@@ -14,14 +14,14 @@ This routine is **READ-ONLY**. Never write, PUT, POST, or otherwise modify any G
 
 Every "scale" run pulls the full daily data for every client. Do not skip steps, do not use `read_file_content` on the sheets (it only returns the sheet structure, no numbers), and never guess numbers.
 
-**Step 1. Download every workbook (all 10 in one parallel batch).**
+**Step 1. Download every workbook (every client in the roster, both tables, in one parallel batch).**
 For each client in the roster, call Google Drive `download_file_content` with:
 - `fileId` = the client's Sheet ID
 - `exportMimeType` = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
 
 This exports the whole workbook (every month tab, daily rows). The result is too big for chat, so the tool saves it to a file and the error message gives the path (`.../tool-results/mcp-Google_Drive-download_file_content-XXXX.txt`). Note each client's path. That's expected, not a failure.
 
-**Step 2. Run the data script once with all 10 files.**
+**Step 2. Run the data script once with all the files** (add the extra keys, e.g. `lv=<path> cz=<path> ips=<path> cna=<path> tc=<path> pocr=<path>`; webinar sheets are read by hand).
 ```
 python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> zin=<path> cmtc=<path> pp=<path> c101=<path> nae=<path> sma=<path> uca=<path> ms=<path>
 ```
@@ -270,7 +270,25 @@ Fix top 2-3 together: ROI <now> → <after>
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
-College Zoom is offboarded (2026-09-29). "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
+**Added 2026-10-16 (live clients outside the original 10). Include them in every run.**
+
+| Key | Client | Meta Account | Sheet ID | Notes |
+|---|---|---|---|---|
+| pocr | Pacow OCompleteRegistration | act_3720107534883410 | `1bkzfuqn968YoJXiY7GHTLNzCA8JFB2Ak7swifecJw9E` | Separate OCR sheet. The main Pacow sheet counts OLead only. |
+| lv | Lingua Verna | act_323807146523531 | `1wvyMPSX8ZK-RewrwbQDF-V8LW9l_0Zx-CXC-NgpJsVA` | Best performer (586% ROI over Jul-Sep). |
+| cz | College Zoom | act_1495360371789422 | `15BB-dlXY_g-0Xl8A9UYv0X88BVs0I7TOFTRzOJC49QU` | Live again (spending in October). |
+| ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account unqueryable: sheet only. Launched about Oct 13. |
+| cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. |
+| tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. |
+| cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
+| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | Webinar sheet, not filled since Sep: Meta only until it is. |
+| c6 | Cyber6 | act_32594844736826895 | `16lKCbxulFNYoSBJUkdjQXRIHyycorRYHUMRNnAHMgYU` | Sheet empty: Meta only. |
+| eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
+| gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
+
+Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
+
+College Zoom was offboarded on 2026-09-29 but is live again (see above). "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
 
 ### Non-call funnels (UCA, MS)
 These two have no booked calls, so the call-based rules (booked calls/day, cost per booked call, show-up, close rate) don't apply. Judge them on their own chain:
@@ -308,6 +326,10 @@ Per client:
 End of Monday, in this order:
 - **Recap table**: client · 🟢/🔴/gap · the one leak · #1 ROI leak (×) · ROI flag.
 - **Ema's priority list**: clients ordered by fastest money, each with its fixes in order and short "try:" hints (Ema decides the rest).
+- **Grouped action recap** (Ema's favourite: always include, right before the client recaps). Every client in one list, grouped by what blocks booked calls, in this order:
+  1. 🟢 Scale (works, add more) · 2. ⬆️ Bump the budget (CPL under max, needs more leads) · 3. 🔴 Leads come in, nobody books (fix the booking step) · 4. 🟡 Calls booked, people don't show · 5. 🔧 Page is broken · 6. ⚪ No data (can't judge bookings) · 7. ⏳ Too new, leave alone · 8. Off.
+  - Per client: **bold name**, one line of numbers (booked/day, cost per booking, the one number that matters), then "Monday:" with 1-2 actions and "Then:" with the next fix. Skip empty groups.
+  - End with **"Your Monday in order:"** one line, clients in action order.
 - **Client recaps** (drafts, never sent): see "Client recaps" below.
 
 ### WEDNESDAY output (thorough, includes scaling)
@@ -349,6 +371,16 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 | North Ave | DWY | https://docs.google.com/spreadsheets/d/1ogYZOegjmxZQyCgq4ZQWLbbwazq1rYtgaagC5fehwoc/edit |
 | EdvancedLearning | DWY | https://docs.google.com/spreadsheets/d/1vL985jrMiUlWDNjRLRiGEk66cUuDunX1fyyeu_WSDU4/edit |
 | UCA | GrowthOS roadmap exists, no profile (confirm offer) | https://docs.google.com/spreadsheets/d/1qHAz-eOS9y7jefjKCFWYJGCo9vQktA-u1vQ2mQrTP4I/edit |
+| Lingua Verna | check profile | https://docs.google.com/spreadsheets/d/1Nwze4rpdzfWFW_KOXhmcEueJRmxDsYkMSI_r8E_inrM/edit |
+| College Zoom | check profile | https://docs.google.com/spreadsheets/d/1zWmTR6CijXJmfv9mrYda217tPpbrSjZaDN7kErKtAFA/edit |
+| IPS | check profile | https://docs.google.com/spreadsheets/d/1GQObu2c0kDhj0dAaNzaJp7cNwAwsgwkOHAAwKxCcFgM/edit |
+| CNA | check profile | https://docs.google.com/spreadsheets/d/1oi_ApDhRn7OFbukGIoBbku73frqF5ymaKo7ZjBFvUl8/edit |
+| Tutoring Club | check profile | https://docs.google.com/spreadsheets/d/1JZjEpZI42J6LX6DbBk2Ajm-n3wL16lxyzWdZOgSAS84/edit |
+| College Prep Pro | check profile | https://docs.google.com/spreadsheets/d/14S5nLypDLrC4RYz5D42a5BlytmW9UznGZw1SCAM-qyI/edit |
+| USM | check profile | https://docs.google.com/spreadsheets/d/1rVRn_kQCHZgxWlzizK65J__B9vNaBfIZA8FqMfrtpmU/edit |
+| Cyber6 | check profile | https://docs.google.com/spreadsheets/d/1VmF5uDnwHgbhmoUY0jKNA5UPPe8bekv6s0tDzuf3RVU/edit |
+| Englisher | check profile | https://docs.google.com/spreadsheets/d/1bJYQZlMd8wEKvewyy6RkzFcJ3DZ4WqweuVjKFH6KAYE/edit |
+| GFM | check profile | https://docs.google.com/spreadsheets/d/1DIx09a-YiLHRfhZAaulD3kolRZ0XsNfizIEnosRnPwQ/edit |
 | Smarta | DFY: no course reminder | none |
 | Much Smarter | unknown: ask Ema | none found |
 
