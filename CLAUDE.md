@@ -278,20 +278,19 @@ Fix top 2-3 together: ROI <now> → <after>
 | Key | Client | Meta Account | Sheet ID | Notes |
 |---|---|---|---|---|
 | pocr | Pacow OCompleteRegistration | act_3720107534883410 | `1bkzfuqn968YoJXiY7GHTLNzCA8JFB2Ak7swifecJw9E` | Separate OCR sheet. The main Pacow sheet counts OLead only. |
-| lv | Lingua Verna | act_323807146523531 | `1wvyMPSX8ZK-RewrwbQDF-V8LW9l_0Zx-CXC-NgpJsVA` | Best performer (586% ROI over Jul-Sep). |
-| cz | College Zoom | act_1495360371789422 | `15BB-dlXY_g-0Xl8A9UYv0X88BVs0I7TOFTRzOJC49QU` | Live again (spending in October). |
 | ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account unqueryable: sheet only. Launched about Oct 13. |
 | cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. Offer not in CRM yet (profile says "not signed"): confirm before client recaps. |
 | tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. Offer not in CRM yet: confirm before client recaps. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
 | usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | Webinar sheet, not filled since Sep: Meta only until it is. Offer not in CRM yet (profile says "not signed"). |
-| c6 | Cyber6 | act_32594844736826895 | `16lKCbxulFNYoSBJUkdjQXRIHyycorRYHUMRNnAHMgYU` | Sheet empty: Meta only. CRM says 90-day "ended early" but ads still run: ask Ema if still a client. |
 | eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
-College Zoom was offboarded on 2026-09-29 but is live again (see above). "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
+**Offboarded (Ema, 2026-10-19): Lingua Verna, College Zoom, Cyber6. Never include them in any run, even if their ad accounts still spend.**
+
+"Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
 
 ### Non-call funnels (UCA, MS)
 These two have no booked calls, so the call-based rules (booked calls/day, cost per booked call, show-up, close rate) don't apply. Judge them on their own chain:
@@ -314,26 +313,20 @@ Read only, as always: findings and actions for Ema, never live changes.
 3. GHL, every client on GHL: contacts for the last 7 and 14 days, split by campaign and utm_content (ad), with tags for prequalified / qualified / booked. This gives leads and bookings per campaign and per ad. Clients without GHL (Core Medical uses its own CRM): say "bookings per ad not tracked".
 4. Tracking check: Meta Lead count vs GHL opt-ins for the same campaign and dates. Find out what the Lead event should fire on before calling it broken.
 
-### MONDAY output (thorough)
-Per client:
-1. Header: 🟢 / 🔴 / data gap · Level · booked/day T7 / T14 · ROI line (last month + 3 months, 🚩 rules).
-2. **Scan table**: the 5 numbers (cost per booked, leads add up, show rate, closes + cash, sheet filled) · T7 · T14 · target · status.
-3. Red accounts, **deep-dive**:
-   - Tracking line (Meta vs GHL, what the event fires on).
-   - **Ladder table**: leads → bookings → shows (per call type) → pitches → closes, number and % at each step, T7 and T14. Bold the first big drop.
-   - **ROI backwards table** (client block format above), "fix top 2-3 together", DATA notes as data-gap rows.
-   - **All bad numbers** line: root cause, symptoms, independent problems.
-   - The one leak + who it's assigned to (VA brief / Viktorija) + the fix.
-4. **Loose ends**: last week's fixes shipped or not, repeating leaks across accounts (SOP gaps), odd sheet data.
+### MONDAY output (simple: Ema wants all eyes on all clients, fast to read)
+Ema's focus (2026-10-19): ROI is the headline, but she controls **30-min booked calls** and **leads per day**. Those two drive every signal.
+- **30-min booked calls are the priority.** Show 60-min booked (Pacow) small, never as the main number: the client books those.
+- **Leads per day per ad set, goal 10** (the Lead scaling trigger). Always show it.
+- Only **7-day roll** and **14-day roll**, written "7d / 14d". No T3, no T7/T14 labels.
+- **Signals:** 🟢 = cost per 30-min booking at/under target AND bookings coming in · 🟡 = bookings come in but cost over target, or leads under 10/day, or too new to judge · 🔴 = 0 bookings, clicks with no leads, or cost per booking over 1.3x max. Signal on the 7-day roll; say if 14d disagrees (improving / getting worse).
+- **Leave out:** offboarded clients, clients off for 7+ days, out-of-roster accounts. Show a client turned off in the last 7 days (one line). One "Not shown" line at the end listing who was skipped.
+- **No** deep-dive ladders, no ROI-backwards tables, no "all bad numbers" lists (Ema reads the numbers herself). The ROI walk still runs: use its #1 leak to pick the one fix.
 
-End of Monday, in this order:
-- **Recap table**: client · 🟢/🔴/gap · the one leak · #1 ROI leak (×) · ROI flag.
-- **Ema's priority list**: clients ordered by fastest money, each with its fixes in order and short "try:" hints (Ema decides the rest).
-- **Grouped action recap** (Ema's favourite: always include, right before the client recaps). Every client in one list, grouped by what blocks booked calls, in this order:
-  1. 🟢 Scale (works, add more) · 2. ⬆️ Bump the budget (CPL under max, needs more leads) · 3. 🔴 Leads come in, nobody books (fix the booking step) · 4. 🟡 Calls booked, people don't show · 5. 🔧 Page is broken · 6. ⚪ No data (can't judge bookings) · 7. ⏳ Too new, leave alone · 8. Off.
-  - Per client: **bold name**, one line of numbers (booked/day, cost per booking, the one number that matters), then "Monday:" with 1-2 actions and "Then:" with the next fix. Skip empty groups.
-  - End with **"Your Monday in order:"** one line, clients in action order.
-- **Client recaps** (drafts, never sent): see "Client recaps" below.
+Output, in this order:
+1. **The board** (one table, every live client): client · signal · leads/day 7d / 14d · 30-min booked 7d / 14d · cost per 30-min booking 7d / 14d (target) · ROI 3 months collected (🚩 rules) · the one fix this week.
+2. **CAPI / tracking recap** (every run, so Ema sees if it gets better): client · Meta leads 7d · sheet (or GHL) leads 7d · match % · last check · better / worse / same. Within 15% = ✅.
+3. **Grouped action recap** (Ema's favourite): 🟢 Scale · ⬆️ Bump the budget · 🔴 Leads come in, nobody books · 🟡 Calls booked, people don't show or buy · 🔧 Page is broken · ⚪ No data · ⏳ Too new · Off (only if turned off in the last 7 days). Per client: **bold name**, one line of numbers, "Monday:" 1-2 actions, "Then:" next fix. Skip empty groups. End with **"Your Monday in order:"**.
+4. **Client recaps** (drafts, never sent): format below. Ema likes them as they are.
 
 ### WEDNESDAY output (thorough, includes scaling)
 Per client:
