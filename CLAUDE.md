@@ -281,11 +281,11 @@ Fix top 2-3 together: ROI <now> → <after>
 | lv | Lingua Verna | act_323807146523531 | `1wvyMPSX8ZK-RewrwbQDF-V8LW9l_0Zx-CXC-NgpJsVA` | Best performer (586% ROI over Jul-Sep). |
 | cz | College Zoom | act_1495360371789422 | `15BB-dlXY_g-0Xl8A9UYv0X88BVs0I7TOFTRzOJC49QU` | Live again (spending in October). |
 | ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account unqueryable: sheet only. Launched about Oct 13. |
-| cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. |
-| tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. |
+| cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. Offer not in CRM yet (profile says "not signed"): confirm before client recaps. |
+| tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. Offer not in CRM yet: confirm before client recaps. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
-| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | Webinar sheet, not filled since Sep: Meta only until it is. |
-| c6 | Cyber6 | act_32594844736826895 | `16lKCbxulFNYoSBJUkdjQXRIHyycorRYHUMRNnAHMgYU` | Sheet empty: Meta only. |
+| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | Webinar sheet, not filled since Sep: Meta only until it is. Offer not in CRM yet (profile says "not signed"). |
+| c6 | Cyber6 | act_32594844736826895 | `16lKCbxulFNYoSBJUkdjQXRIHyycorRYHUMRNnAHMgYU` | Sheet empty: Meta only. CRM says 90-day "ended early" but ads still run: ask Ema if still a client. |
 | eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
@@ -393,6 +393,8 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 - Never assume a campaign list: read every account in Meta.
 - New ads inside a winning ad set starve: always flag them.
 - An account with ads off still gets a short block (since when, last ROI, fix before relaunch).
+- A sheet full of zeros does not mean the ads are off. Check Meta spend before calling a client "off" (CZ, Oct 19: sheet blank since Oct 15, Meta still spending about $166/day). Script ELIGIBLE: NO + Meta spend = data gap, not off.
+- Meta "required" follow-up calls (trend, benchmark, opportunity score) on an account with $0 spend return nothing: skip them.
 
 ### MONDAY: Funnel Review (diagnose, don't fix live)
 
