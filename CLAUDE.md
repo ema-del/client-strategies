@@ -338,7 +338,11 @@ Per client:
    - Other campaigns: the 4 gates table (client block format).
    - Either way, show the ROI line and ROI × of the top leak, so a scale call is always checked against the chain.
 5. **Ad set table**: ad set · budget · leads/day T7 · frequency · learning · last edit · action (duplicate into new ad set / leave alone / bump / cut 20%).
-6. **Create ads**: the winner (sales → cost per booked call, say which one), what's locked (format, offer, pain), the 5 new angles written out, where they go (fresh test ad set, about $50/day). Flag any new ads sitting inside a winning ad set.
+6. **Ad bank: next ads to create (every live client, every Wednesday, Ema 2026-10-20).** The SOP says every client always has new ads ready, so this section is never skipped, even for clients that don't need new ads this week.
+   - **Add new ads now? Yes / not yet / no**, with the one-line reason from the review (e.g. "yes: frequency 1.8, one ad carries everything" or "not yet: fix the page first, new ads won't help a 9% opt-in rate").
+   - **Where they go:** new ad set (Lead/booking campaigns, about $50/day), same ad set (webinars under 20 registrations/day), or into the bank to launch later.
+   - **Direction, not scripts:** the winner it builds on (sales → cost per booked call, say which), what stays locked (offer, winning pain), and 3-5 directions to explore (new angles, formats, awareness levels or pain points). Short and loose: Ema writes or briefs the actual ads.
+   - Flag any new ads sitting inside a winning ad set (they starve).
 
 End of Wednesday:
 - **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
