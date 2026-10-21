@@ -47,7 +47,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 **Step 4. Meta Ads (only for clients that pass step 1, "no leak").** Use the Meta Ads MCP to check what the sheet can't show: ad set learning status, last budget change, current daily budget, ABO vs CBO, number of live ads, testing ad set (Level 2+), and frequency. Check `is_ads_mcp_enabled` via `ads_get_ad_accounts` first. EdvancedLearning and Class101 are MCP-blocked: write "verify in Ads Manager". **Read only. Never change a budget, status or ad.**
 
 ### Reading the data
-- **Calls taken lag:** if the script flags calls taken = 0 with bookings > 0, the sheet hasn't been updated yet. Judge show-up on the last full month instead, and say so once.
+- **Calls taken = 0 with bookings > 0:** treat it as accurate (0 shows) unless Ema says the sheet is behind (Ema, 2026-10-21).
 - **Template targets:** right now the 8 call-funnel sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
 - **Kill/scale targets:** cost per booked call target = the sheet's Cost Per 30 Booked ($150, max $300; Pacow: Cost Per 60 Booked $250). CAC target = the sheet's Cost Per New Client ($1,000, max $2,000). We don't track cost per qualified call: never use it.
 - **Which booked call counts:** for Pacow, the 60-min call is the real goal (the 30-min call is the first step). For the B2C clients, the 30-min call is the main booking.
@@ -347,7 +347,11 @@ Per client:
 End of Wednesday:
 - **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
 - **Do this week** list for Ema, ordered by fastest money.
-- **Client recaps** (drafts, never sent), same format as Monday, focused on this week's ad changes: what's working, what's getting cut or scaled, what they need to do.
+- **No client recaps on Wednesday** (Ema, 2026-10-21). Client recaps are Monday only.
+
+Wednesday rules from Ema (2026-10-21):
+- **Kills that bring CPL or cost per booking down:** for every client, say which ads to turn off (and which ad sets to cut) to lower CPL or cost per 30-min booking, with the numbers. Check everything available: GHL bookings per ad, Meta spend/leads per ad, ad set CPL. Say what you checked.
+- **Ad bank for ALL clients, always**, even when another bottleneck comes first. "Add now?" can be "not yet", but the directions are always written so the bank is ready.
 
 ### Client recaps (end of Monday AND Wednesday, drafts only)
 Per client, for the client to read (they don't know what the numbers mean):
@@ -448,4 +452,4 @@ Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → as
 - Default scale = new ad set. More budget only if CPL stays flat. Inside a triggered ad set: kill losers only, never add ads.
 - Ad set trigger = event fires per day: about 10 for Lead, 3-5 for Schedule. Same logic for both.
 - Always T7 and T14 side by side (T7 better = improving). T3 only for sudden drops.
-- Missing calls taken / clients / revenue = data gap, not a result.
+- **Treat the sheet as accurate first** (Ema, 2026-10-21). A blank or 0 is read as a real 0 (no shows, no sales). Don't call it a data gap or "not filled yet" unless Ema says the sheet is behind. Meta or GHL disagreeing with the sheet goes in the tracking recap, not as a reason to doubt the sheet.
