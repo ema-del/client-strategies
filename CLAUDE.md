@@ -282,7 +282,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. Offer not in CRM yet (profile says "not signed"): confirm before client recaps. |
 | tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. Offer not in CRM yet: confirm before client recaps. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
-| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: gid 212552964. Offer not in CRM yet (profile says "not signed"). |
+| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). Offer not in CRM yet (profile says "not signed"). |
 | eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
@@ -308,6 +308,7 @@ Before writing anything client-facing, check the client's offer (GrowthOS 90-day
 - Per client: one line of numbers + the verdict, then **numbered steps she can do right now** (one action per step, with the exact ad / ad set / budget). Then the ad bank as its own short step.
 - Page / landing page fixes: one step only, "Page: separate task". No breakdown (she handles pages in a separate task).
 - No big tables across all clients, no long recap sections. Keep every client block short. Monday's client recaps stay (Monday only).
+- **After the checklist, both days: "Top 3 holding back ROI" per client** (Ema, 2026-10-21). Anything that blocks ROI, ours or the client's (show-up, sales, tracking, page, follow-up, offer). One short line each, biggest first.
 
 Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the matching SOP on **all clients**. Source docs: "01. Funnel Reporting" (`1oyWcajslO508zTx_XVAvcOVGw4kgADIcRdZ-ySN5jsQ`) and "02. Media Buying" (`1vn4Gd-ye4jeFymHJrRuN1eTeQRBGasDI7nJvpKLiKT0`). If those docs change, follow the docs.
 
