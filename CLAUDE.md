@@ -303,6 +303,12 @@ Before writing anything client-facing, check the client's offer (GrowthOS 90-day
 
 ## Monday and Wednesday SOPs (manual triggers)
 
+**Output flow, both days (Ema, 2026-10-21): one client at a time, steps 1 by 1.** Ema works through the output live (doing it herself or making VA tasks), so big blocks overwhelm her.
+- Go client by client, in order of fastest money. One short top line with the order.
+- Per client: one line of numbers + the verdict, then **numbered steps she can do right now** (one action per step, with the exact ad / ad set / budget). Then the ad bank as its own short step.
+- Page / landing page fixes: one step only, "Page: separate task". No breakdown (she handles pages in a separate task).
+- No big tables across all clients, no long recap sections. Keep every client block short. Monday's client recaps stay (Monday only).
+
 Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the matching SOP on **all clients**. Source docs: "01. Funnel Reporting" (`1oyWcajslO508zTx_XVAvcOVGw4kgADIcRdZ-ySN5jsQ`) and "02. Media Buying" (`1vn4Gd-ye4jeFymHJrRuN1eTeQRBGasDI7nJvpKLiKT0`). If those docs change, follow the docs.
 
 Read only, as always: findings and actions for Ema, never live changes.
