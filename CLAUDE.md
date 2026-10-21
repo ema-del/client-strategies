@@ -96,7 +96,7 @@ Set each client's level from booked calls per day (trailing 7 days).
 - Find the pain point booking the cheapest calls. Build 5 new ads around it (new angles first, then new formats or awareness levels).
 - Launch them in a **new ad set** at $50-100/day next to the winner. Never add ads into a winning ad set.
 
-**Webinars / challenges**
+**Webinars / challenges** (clients on this funnel: CPP, USM)
 - Ads run 5-10 days. Fill the tracking sheet daily before touching anything.
 - Cost per registration good: raise budget **20-50% per day** (up to 100% if numbers are strong). Not good: kill weak ads, shift budget, add new ads.
 - Fix checks after each webinar: landing page under 20% → fix the page. Show rate under 30% → fix reminders. Judge lead quality only after $3-5k spent and 50-100+ people live.
@@ -282,7 +282,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. Offer not in CRM yet (profile says "not signed"): confirm before client recaps. |
 | tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. Offer not in CRM yet: confirm before client recaps. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
-| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | Webinar sheet, not filled since Sep: Meta only until it is. Offer not in CRM yet (profile says "not signed"). |
+| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: gid 212552964. Offer not in CRM yet (profile says "not signed"). |
 | eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
