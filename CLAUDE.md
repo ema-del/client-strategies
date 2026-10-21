@@ -402,6 +402,7 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 - New ads inside a winning ad set starve: always flag them.
 - An account with ads off still gets a short block (since when, last ROI, fix before relaunch).
 - A sheet full of zeros does not mean the ads are off. Check Meta spend before calling a client "off" (CZ, Oct 19: sheet blank since Oct 15, Meta still spending about $166/day). Script ELIGIBLE: NO + Meta spend = data gap, not off.
+- GHL date ranges: use the client's local time zone, not UTC (USM, Oct 20: a UTC cutoff showed 6 registrations, the real Pacific-time day had 16). Count every contact with a Meta utm (meta, fb, ig), not one source only.
 - Meta "required" follow-up calls (trend, benchmark, opportunity score) on an account with $0 spend return nothing: skip them.
 
 ### MONDAY: Funnel Review (diagnose, don't fix live)
