@@ -49,10 +49,12 @@ The windows end **yesterday**, because today's row is usually incomplete.
 ### Reading the data
 - **Calls taken = 0 with bookings > 0:** treat it as accurate (0 shows) unless Ema says the sheet is behind (Ema, 2026-10-21).
 - **Template targets:** right now the 8 call-funnel sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
+- **Prequalified Lead event (Matt, 2026-10-22):** when the Lead event fires only on prequalified opt-ins, or the ad is a direct offer ("we'll help you", not a free training), the $15-25 CPL template is for free-training opt-ins and doesn't apply. **About $50 per prequalified lead is good.** Applies to Pacow now (B2B, Lead fires on prequalified) and any client set up the same way. Use $50 as the CPL target in the Lead checks for these clients, and still judge on cost per booked call first.
 - **Kill/scale targets:** cost per booked call target = the sheet's Cost Per 30 Booked ($150, max $300; Pacow: Cost Per 60 Booked $250). CAC target = the sheet's Cost Per New Client ($1,000, max $2,000). We don't track cost per qualified call: never use it.
 - **Which booked call counts:** for Pacow, the 60-min call is the real goal (the 30-min call is the first step). For the B2C clients, the 30-min call is the main booking.
 - **Year boundary:** sheets are per year. In early January the T7 window can reach into last year's sheet. If so, say which days are missing.
-- **Fallback targets:** if a target cell is blank, use the client's BEST MONTH from the script. Only then the generic fallback (CPM <$30, CPC <$4, directional only for non-USD accounts).
+- **Fallback targets:** if a target cell is blank, use the client's BEST MONTH from the script. Only then the generic fallback (CPC <$4, directional only for non-USD accounts).
+- **CPM (Matt, 2026-10-22):** directional only. Never kill or scale on CPM: Meta charges more per impression because it finds buyers better. Use it to compare events or ads (Lead vs Schedule, static vs video). B2B: under $150-200 is fine (Pacow ~$80 is fine; Matt runs $150-160, others $200-300). B2C: over ~$100 is a warning. The old "CPM <$30" target is retired.
 
 ## Core scaling rules (from the playbook)
 
@@ -200,13 +202,17 @@ For any campaign **optimizing on the Lead event**, use these 3 checks instead of
 | 3. Closes | Any closes? | last 30 days | new clients > 0 |
 
 Order:
-1. **Check 1 fails:** is CPL under the sheet's Max (template $45)?
+1. **Check 1 fails:** is CPL under the sheet's Max (template $45; prequalified-Lead clients like Pacow: about $50)?
    - Yes: **the first scaling step is a small budget bump on the existing ad set (+20%, per the playbook)** to reach 10 leads a day. Then check 2 and 3 anyway, and list what fails as the next fix.
    - No: don't bump. Fix CPL first (page or ads, whichever the ROI walk ranks higher).
 2. **Checks 2 or 3 fail (with check 1 passing):** don't scale. Fix that stage first (booking, show-up, sales, or the sheet if it's a data gap).
 3. **All 3 pass: ✅ scale the campaign.**
 
 **How to scale a Lead campaign:** add NEW ad sets with testing variety (different pain points, angles, formats, audiences), and **stop touching the first ad set**. The goal is many ad sets working at once (about 10), so one winner dropping doesn't take the account down with it. Never edit, add ads to, or rebudget the original winning ad set.
+
+**Budget ceiling per ad set (Matt, 2026-10-22, mainly B2B / prequalified Lead):** a working Lead ad set gets raised **+20% every 2-3 days while CPM, frequency and cost per result stay flat**, up to about **€500/day** (at ~$50 per prequalified lead that's ~10 leads/day). Then launch a new ad set. Rough rule: one Lead ad set per ~€500/day of spend. If lead quality drops after a raise, go back to the last budget where quality was good and launch the new ad set from there. B2C with cheap leads hits 10 leads/day at a much lower budget, so the 10 leads/day trigger comes first. Example: Pacow's relaunched OLead ad set (4-5 prequalified leads/day at ~€50-60, €300/day) → +20% steps toward €500, new ad set after that.
+
+**Optimization event tests (Matt, 2026-10-22):** judge Lead vs Subscribe vs Schedule on **booked calls and cost per call**, never CPL or CPM (a Schedule ad set can show $50-100 CPL and still win on cost per call). 7 calls vs 1 is a clear winner: kill the loser. Next test after Lead wins: duplicate the winning ad set with the Schedule event at the same budget. When cash is tight, run one test at a time, and new, clearly better ads come before an event test.
 
 Output for these campaigns: swap the gates table for
 ```
@@ -445,7 +451,13 @@ Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → as
 - Scale, Lead campaigns: the 3 Lead checks (10+ leads/day per ad set, booked + taken, 1+ close in 30 days), T7 and T14. All yes → new ad set with a new test, never touch the original, aim for about 10 ad sets. Check 1 no + CPL under max → +20% budget. CPL at/over max → no bump, fix CPL. Check 2 or 3 no → fix that step.
 - **Inside an ad set that hit its trigger:** only kill losers. Never add new ads to it. New ads always go into a new ad set.
 - **Trigger = optimization-event fires per day per ad set** (Matt): about 10/day for Lead, 3-5/day for Schedule (or any booking event). Over that → add ad sets. Same logic for every campaign type, only the number changes because Lead is a cheaper action.
-- All ad sets: frequency over 1.5 on cold → new ad set, not more budget. Raise budget only if CPL stays flat.
+- All ad sets: frequency over 1.5 on cold → new ad set, not more budget. Raise budget only if CPL stays flat. (Matt, 2026-10-22: on a long-running winner, 30-day frequency ~2 and 7-day ~1.5 is normal; people need to see several ads before they convert.)
+- **Cost per result jumps on a long-running winner (Matt, 2026-10-22):** one or two bad days is not a signal. Check in order:
+  1. CPM, frequency, CTR and landing page opt-in rate vs the last 7-30 days. All flat → it's not the ads. Wait 2-3 more days.
+  2. Did a newer ad start soaking up the spend? If yes and it's still bad after 2-3 days → turn that ad off.
+  3. Still bad → add about **3 of the best new ads into that same ad set** (not 10-15). This is the one exception to "never add ads to a winning ad set": the ad set is declining and already has the audience data.
+  4. Still bad after another week → funnel test (VSL vs no VSL, see show-up below).
+- **Q4 seasonality (Matt, 2026-10-22):** CPMs climb into Black Friday and the holidays (e-commerce dumps budget). Nov-Dec are usually slower for sales: focus on filling the pipeline (leads, free content) for January instead of forcing sales. Learn each client's own seasons from their history.
 
 **Block 2: Create ads.**
 1. Pick the winner: **most sales** → if not enough sales, **cheapest cost per booked call** (GHL utm_content). Say which one you used. Note format, angle, pain.
@@ -457,7 +469,9 @@ Before: bookings per ad from GHL (utm_content on booked contacts). No GHL → as
 ### Decision rules (both days)
 - Success and kills: cost per booked call (judge after 2x its target in spend), then keep winners until 2-3x CAC before killing for no sales. CPL only matters when leads don't book. Kill on Wednesday only.
 - New ads are built from: sales → cost per booked call.
-- Default scale = new ad set. More budget only if CPL stays flat. Inside a triggered ad set: kill losers only, never add ads.
+- Default scale = new ad set. More budget only if CPL stays flat. Inside a triggered ad set: kill losers only, never add ads. Exception: a working Lead ad set can be raised +20% at a time up to ~€500/day before the new ad set (B2B / prequalified Lead, Matt 2026-10-22).
+- **Show-up drop (Matt, 2026-10-22):** fix the ads first (cost per call), then test a VSL before the application in GHL as a **70/30 split** (70% to the page that works). Tag which page each contact came from and compare bookings, show-up and closes. The VSL adds friction, so cost per call may rise while show-up and close improve.
+- **Close rate depends on the source (Matt, 2026-10-22):** cold direct-application ads ~10-12%, cold traffic in general ~20-30%, organic / YouTube / community ~50-60%, blended ~30-40%. Judge a client's close rate against the source of the calls, not one flat number.
 - Ad set trigger = event fires per day: about 10 for Lead, 3-5 for Schedule. Same logic for both.
 - Always T7 and T14 side by side (T7 better = improving). T3 only for sudden drops.
 - **Treat the sheet as accurate first** (Ema, 2026-10-21). A blank or 0 is read as a real 0 (no shows, no sales). Don't call it a data gap or "not filled yet" unless Ema says the sheet is behind. Meta or GHL disagreeing with the sheet goes in the tracking recap, not as a reason to doubt the sheet.
