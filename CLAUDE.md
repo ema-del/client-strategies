@@ -23,7 +23,7 @@ This exports the whole workbook (every month tab, daily rows). The result is too
 
 **Step 2. Run the data script once with all the files** (add the extra keys, e.g. `lv=<path> cz=<path> ips=<path> cna=<path> tc=<path> pocr=<path>`; webinar sheets are read by hand).
 ```
-python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> zin=<path> cmtc=<path> pp=<path> c101=<path> nae=<path> sma=<path> uca=<path> ms=<path>
+python3 scripts/scale_data.py --as-of <today YYYY-MM-DD> pcw=<path> edv=<path> pp=<path> c101=<path> nae=<path> sma=<path> uca=<path> ms=<path>
 ```
 (`openpyxl` is installed by the SessionStart hook in `.claude/settings.json`. If it's missing: `pip install -q openpyxl`.)
 
@@ -133,7 +133,7 @@ Before any scaling call, run the backward decision tree:
 1. CTR healthy + LPCR low → landing page/offer mismatch is the primary suspect, above CPM.
 2. Real clicks + near-0 leads → top priority, always.
 3. Real leads + 0 downstream movement → assume a disconnected post-lead pipeline first.
-4. Pre-Qualified/Qualified 0/0 by design → "not tracked, skip evaluating" (Core Medical Training Center, Smarta Tutoring). Qualified > 0 with Pre-Qualified = 0 → funnel/process gap, not CRM.
+4. Pre-Qualified/Qualified 0/0 by design → "not tracked, skip evaluating" (Smarta Tutoring). Qualified > 0 with Pre-Qualified = 0 → funnel/process gap, not CRM.
 5. Revenue lag: closing rate, cost per client and ROI lag spend by weeks. Flag it.
 6. Small sample: 1-2 booked/taken/closed in the window → say so, don't treat as signal.
 
@@ -162,7 +162,7 @@ The backward decision tree finds the **root cause** (most-upstream broken number
 - A downstream BAD that's caused by an upstream one (e.g. high cost per client because LPCR is bad) is still listed, marked "symptom of X".
 - A downstream BAD that isn't caused upstream (e.g. close rate 5% while bookings are cheap) is its own issue and gets its own Issue → Solution → Tangible Action.
 - Skip 60-min call metrics for clients with no 60-min bookings in the last 90 days (the script does this).
-- Pre-Qualified/Qualified stays "not tracked, skip" for Core Medical and Smarta.
+- Pre-Qualified/Qualified stays "not tracked, skip" for Smarta.
 
 ## ROI flag (every run, every client)
 
@@ -270,12 +270,10 @@ Fix top 2-3 together: ROI <now> → <after>
 |---|---|---|---|---|
 | pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
 | edv | EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
-| zin | Zinkerz | act_638396012894614 | `1zJqc4H7PsyAzext6MMpuGFYMPrr2Yrx1sUCCpy2fSho` | |
-| cmtc | Core Medical Training Center | act_1101825501101670 | `1nordSfrBDgMIz80lf_VSbQA7Y9w4w9zxawph4okq2L8` | Pre-Qualified/Qualified not tracked by design |
 | pp | Personalized Prep | act_1747267276471518 | `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` | |
 | c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
-| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. |
+| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. The xlsx export is too big for the Drive connector: if it fails, download with `exportMimeType` = `text/csv` (gives the month Dashboard tab only) and use Meta for 7d/14d. Sheet targets: CPL <£15 (max £20), cost per 45-min booked <£50 (max £100). |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
@@ -285,16 +283,19 @@ Fix top 2-3 together: ROI <now> → <after>
 |---|---|---|---|---|
 | pocr | Pacow OCompleteRegistration | act_3720107534883410 | `1bkzfuqn968YoJXiY7GHTLNzCA8JFB2Ak7swifecJw9E` | Separate OCR sheet. The main Pacow sheet counts OLead only. |
 | ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account unqueryable: sheet only. Launched about Oct 13. |
-| cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | Ads MCP blocked. Launched Oct 15. Offer not in CRM yet (profile says "not signed"): confirm before client recaps. |
-| tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | Launched Oct 15. Offer not in CRM yet: confirm before client recaps. |
+| cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | **Lead form funnel.** Ads MCP blocked. Launched Oct 15. |
+| tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | **Lead form funnel** (Meta instant form). Launched Oct 15. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
-| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). Offer not in CRM yet (profile says "not signed"). |
-| eng | Englisher | act_926522605529299 | `1EIDLXUP3JRf3TWYVn319jo4MHTuJ-BOKHMZhePTNghw` | GBP. Sheet not filled since Aug. |
+| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
-**Offboarded (Ema, 2026-10-19): Lingua Verna, College Zoom, Cyber6. Never include them in any run, even if their ad accounts still spend.**
+**Offboarded (Ema, 2026-10-19 and 2026-10-26): Lingua Verna, College Zoom, Cyber6, Zinkerz, Core Medical (CMS), Englisher. Never include them in any run, even if their ad accounts still spend. Don't list them in "Not shown" either.**
+
+**Gaja Collective (act_1095582199186919) is a client, but not launched by us yet: ignore it in runs for now (Ema, 2026-10-26).**
+
+**Funnel types (Ema, 2026-10-26):** CNA and TC = lead form funnel. USM and CPP = webinar funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
 
 "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
 
@@ -377,12 +378,10 @@ Per client, for the client to read (they don't know what the numbers mean):
 
   Remember: you've invested in learning how to run these ads, and that starts with watching the course modules on time, before coaching, so you can apply it to your own ads.
 
-Check the offer first (Client Profiles folder). Course reminder only for clients with course modules (GrowthOS 90-day / DWY). Done-for-you (Smarta): no course reminder. No client recap for Pacow (that's us).
+Check the offer first (Client Profiles folder). Course reminder only for clients with course modules (GrowthOS 90-day / DWY). Done-for-you (Smarta): no course reminder. No client recap for Pacow (that's us). Every other live client gets a recap every Monday (Good news / Bad news included), even when the offer isn't in the CRM yet (Ema, 2026-10-26): write it for their funnel type and skip only the course reminder if the offer is unknown.
 
 | Client | Offer | Roadmap |
 |---|---|---|
-| Zinkerz | DWY | https://docs.google.com/spreadsheets/d/1FHTdV6aVx3WhQI94B6Olwu56Ye2pYUbfpbjCFfoEACU/edit |
-| Core Medical | DWY | https://docs.google.com/spreadsheets/d/1KnyguY1I_UQ7pvuJ4CEmMozZ-l7n2sG3lXTpU8mSf-I/edit |
 | Personalized Prep | DWY | https://docs.google.com/spreadsheets/d/1ydOARWLGTq1ZpkSUPqq3mRG5mm5DxVDlPhT3Z-i32Sw/edit |
 | Class101 | DWY | https://docs.google.com/spreadsheets/d/1xXsQNLAYVsjGMT5mk7EFN2ngHQo4NfvN-7T9xFTWPGM/edit |
 | North Ave | DWY | https://docs.google.com/spreadsheets/d/1ogYZOegjmxZQyCgq4ZQWLbbwazq1rYtgaagC5fehwoc/edit |
@@ -396,7 +395,6 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 | College Prep Pro | check profile | https://docs.google.com/spreadsheets/d/14S5nLypDLrC4RYz5D42a5BlytmW9UznGZw1SCAM-qyI/edit |
 | USM | check profile | https://docs.google.com/spreadsheets/d/1rVRn_kQCHZgxWlzizK65J__B9vNaBfIZA8FqMfrtpmU/edit |
 | Cyber6 | check profile | https://docs.google.com/spreadsheets/d/1VmF5uDnwHgbhmoUY0jKNA5UPPe8bekv6s0tDzuf3RVU/edit |
-| Englisher | check profile | https://docs.google.com/spreadsheets/d/1bJYQZlMd8wEKvewyy6RkzFcJ3DZ4WqweuVjKFH6KAYE/edit |
 | GFM | check profile | https://docs.google.com/spreadsheets/d/1DIx09a-YiLHRfhZAaulD3kolRZ0XsNfizIEnosRnPwQ/edit |
 | Smarta | DFY: no course reminder | none |
 | Much Smarter | unknown: ask Ema | none found |
