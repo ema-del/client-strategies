@@ -327,6 +327,30 @@ Read only, as always: findings and actions for Ema, never live changes.
 3. GHL, every client on GHL: contacts for the last 7 and 14 days, split by campaign and utm_content (ad), with tags for prequalified / qualified / booked. This gives leads and bookings per campaign and per ad. Clients without GHL (Core Medical uses its own CRM): say "bookings per ad not tracked".
 4. Tracking check: Meta Lead count vs GHL opt-ins for the same campaign and dates. Find out what the Lead event should fire on before calling it broken.
 
+### To-do list (END of every Monday AND Wednesday run, Ema 2026-10-26)
+Always the last section. Same format both days:
+```
+Group 1: get to 10 leads a day (closest and fastest first)
+1. <Client> · <x> leads/day · <cost per 30-min booking, or cost per lead / registration if no bookings>
+
+* <action>
+* <action>
+
+Group 2: already at 10+ leads a day → now ROI
+<n>. <Client> · <x> leads/day · <cost per lead vs goal>
+
+* <action>
+
+Group 3: no data / off
+<n>. <Client> (<paused / sheet blank since X>)
+
+* <action>
+```
+- Group 1 order: closest to 10 leads/day first, then fastest money. Leads/day = 7d roll (Meta when the sheet is empty, say so).
+- Short bullets, one action each, exact ad / ad set / budget. Page work = "Page test: opt-ins <now>% → <goal>%".
+- Carry over Ema's open items: when she pastes her last list, struck-through items are done (drop them), everything else that's still true comes back on the new list.
+- Numbering runs across the 3 groups.
+
 ### MONDAY output (simple: Ema wants all eyes on all clients, fast to read)
 Ema's focus (2026-10-19): ROI is the headline, but she controls **30-min booked calls** and **leads per day**. Those two drive every signal.
 - **30-min booked calls are the priority.** Show 60-min booked (Pacow) small, never as the main number: the client books those.
@@ -341,6 +365,7 @@ Output, in this order:
 2. **CAPI / tracking recap** (every run, so Ema sees if it gets better): client · Meta leads 7d · sheet (or GHL) leads 7d · match % · last check · better / worse / same. Within 15% = ✅.
 3. **Grouped action recap** (Ema's favourite): 🟢 Scale · ⬆️ Bump the budget · 🔴 Leads come in, nobody books · 🟡 Calls booked, people don't show or buy · 🔧 Page is broken · ⚪ No data · ⏳ Too new · Off (only if turned off in the last 7 days). Per client: **bold name**, one line of numbers, "Monday:" 1-2 actions, "Then:" next fix. Skip empty groups. End with **"Your Monday in order:"**.
 4. **Client recaps** (drafts, never sent): format below. Ema likes them as they are.
+5. **To-do list** (format above).
 
 ### WEDNESDAY output (thorough, includes scaling)
 Per client:
@@ -360,7 +385,7 @@ Per client:
 
 End of Wednesday:
 - **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
-- **Do this week** list for Ema, ordered by fastest money.
+- **To-do list** (format above), ordered by Group 1 / 2 / 3.
 - **No client recaps on Wednesday** (Ema, 2026-10-21). Client recaps are Monday only.
 
 Wednesday rules from Ema (2026-10-21):
