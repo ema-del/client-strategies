@@ -8,7 +8,7 @@ This file reuses the rules from the weekly funnel reporting session (`ema-del/bu
 
 Source for the scaling rules: "Pacow Playbook (from Skool)" in Google Drive (01. Clients), sections "Scaling & Optimizing", "Live Webinar / Challenge Funnel", "IG Follower Funnel / DM Ad Funnel" and "Ads Foundations". Follow the playbook, not generic advice.
 
-This routine is **READ-ONLY**. Never write, PUT, POST, or otherwise modify any Google Sheet, landing page, ad account or budget. Diagnosis and recommendations only. Ema makes every live change.
+This routine is **READ-ONLY**. GHL reads are always allowed without asking; anything that changes GHL (contacts, tags, workflows, appointments) needs Ema's approval first (Ema, 2026-10-28). Never write, PUT, POST, or otherwise modify any Google Sheet, landing page, ad account or budget. Diagnosis and recommendations only. Ema makes every live change.
 
 ## Data source (ALWAYS follow these steps, in order)
 
@@ -47,7 +47,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 **Step 4. Meta Ads (only for clients that pass step 1, "no leak").** Use the Meta Ads MCP to check what the sheet can't show: ad set learning status, last budget change, current daily budget, ABO vs CBO, number of live ads, testing ad set (Level 2+), and frequency. Check `is_ads_mcp_enabled` via `ads_get_ad_accounts` first. EdvancedLearning and Class101 are MCP-blocked: write "verify in Ads Manager". **Read only. Never change a budget, status or ad.**
 
 ### Reading the data
-- **Calls taken = 0 with bookings > 0:** treat it as accurate (0 shows) unless Ema says the sheet is behind (Ema, 2026-10-21).
+- **Calls taken = 0 with bookings > 0:** treat it as accurate (0 shows) unless Ema says the sheet is behind (Ema, 2026-10-21). Only flag it when it's the first problem in the chain; if there's a bigger issue upstream (page, leads, booking), flag that one and leave the calls-taken flag out, because Ema doesn't always update calls taken (Ema, 2026-10-28).
 - **Template targets:** right now the 8 call-funnel sheets carry the same template targets (CPL <$15, max $45; cost per 30-min booked <$150, max $300; cost per 60-min booked <$250, max $500), in USD even for Smarta (GBP). Use them, but note it once per run until the sheets get client-specific targets.
 - **Prequalified Lead event (Matt, 2026-10-22):** when the Lead event fires only on prequalified opt-ins, or the ad is a direct offer ("we'll help you", not a free training), the $15-25 CPL template is for free-training opt-ins and doesn't apply. **About $50 per prequalified lead is good.** Applies to Pacow now (B2B, Lead fires on prequalified) and any client set up the same way. Use $50 as the CPL target in the Lead checks for these clients, and still judge on cost per booked call first.
 - **Kill/scale targets:** cost per booked call target = the sheet's Cost Per 30 Booked ($150, max $300; Pacow: Cost Per 60 Booked $250). CAC target = the sheet's Cost Per New Client ($1,000, max $2,000). We don't track cost per qualified call: never use it.
@@ -90,9 +90,15 @@ Set each client's level from booked calls per day (trailing 7 days).
 
 ## Funnel-specific scaling rules
 
-**DM ads**
-- Green light: running **3+ days**, at least **1 call booked**, and **20-25% of leads look qualified**.
-- Then +20% every 2-3 days, in the morning. If things go south, drop 20%.
+**DM ads / Messenger funnel** (Skool "The DM Ad Funnel"; client on it: PP)
+- Chain: spend → messages (conversations started) → response rate (**>25%**) → qualified (**20-25% of leads**) → booked → show → client.
+- Benchmarks: cost per lead B2C direct **$10-25** (indirect $2-5); cost per booked call B2C **$100-250 (most ~$200)**; cost per client ~25% of program price; cash collected 2-3x spend, contracted 4-6x.
+- Best under ~$100/day; over that, look at conversion ads.
+- Each ad has its own keyword: bookings per ad come from the keyword (ad renamed daily with calls + clients), not GHL utm.
+- Kill: an ad spends **2-3x the cost-per-call KPI** with no qualified call (e.g. $200 → $400-600). Kill sooner if every lead is clearly awful. Don't touch for the first 3 days.
+- Green light to scale: running **3+ days**, at least **1 call booked**, and **20-25% of leads look qualified**. Then +20% every 2-3 days, in the morning. If things go south, drop 20%.
+- New ads: winning pain → 5 new ads in a **new ad set** at $50-100/day. Never into the winning ad set.
+- Follow-up check (direct offer): reply within 10-15 min, then 6h, 24h, 48h. No response = fix follow-up before the ads.
 
 **IG follower / remix scaling**
 - Find the pain point booking the cheapest calls. Build 5 new ads around it (new angles first, then new formats or awareness levels).
@@ -270,10 +276,10 @@ Fix top 2-3 together: ROI <now> → <after>
 |---|---|---|---|---|
 | pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
 | edv | EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
-| pp | Personalized Prep | act_1747267276471518 | `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` | |
+| pp | Personalized Prep | act_1747267276471518 | `17fseVTM39w18nAD3PvdSBIAh_kfqHB-qPBF0Z8fntYo` | **Messenger (DM ad) funnel** since late Oct 2026 (Ema, 2026-10-28). Judge with the DM Ad Funnel benchmarks below. Old sheet `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` is retired. |
 | c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
-| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. The xlsx export is too big for the Drive connector: if it fails, download with `exportMimeType` = `text/csv` (gives the month Dashboard tab only) and use Meta for 7d/14d. Sheet targets: CPL <£15 (max £20), cost per 45-min booked <£50 (max £100). |
+| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. The xlsx (and .ods) export is too big for the Drive connector. Read the daily rows with the Google Sheets connector instead: `get_values` on range `Oct!A1:AH34` (current month tab). If Sheets isn't connected, fall back to Drive `text/csv` (Dashboard tab only, month to date) + Meta for 7d/14d, and tell Ema to reconnect Google Sheets at claude.ai/customize/connectors. Sheet targets: CPL <£15 (max £20), cost per 45-min booked <£50 (max £100). |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
@@ -286,16 +292,18 @@ Fix top 2-3 together: ROI <now> → <after>
 | cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | **Lead form funnel.** Ads MCP blocked. Launched Oct 15. |
 | tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | **Lead form funnel** (Meta instant form). Launched Oct 15. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
-| usm | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
+| usm (STOPPED) | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
 **Offboarded (Ema, 2026-10-19 and 2026-10-26): Lingua Verna, College Zoom, Cyber6, Zinkerz, Core Medical (CMS), Englisher. Never include them in any run, even if their ad accounts still spend. Don't list them in "Not shown" either.**
 
+**USM: stopped (Ema, 2026-10-28). Don't run USM in Monday or Wednesday until Ema says it's back.**
+
 **Gaja Collective (act_1095582199186919) is a client, but not launched by us yet: ignore it in runs for now (Ema, 2026-10-26).**
 
-**Funnel types (Ema, 2026-10-26):** CNA and TC = lead form funnel. USM and CPP = webinar funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
+**Funnel types (Ema, 2026-10-26/28):** CNA and TC = lead form funnel. CPP = webinar funnel. PP = Messenger (DM ad) funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
 
 "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
 
