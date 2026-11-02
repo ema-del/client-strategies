@@ -366,14 +366,19 @@ Group 3: no data / off
 - Carry over Ema's open items: when she pastes her last list, struck-through items are done (drop them), everything else that's still true comes back on the new list.
 - Numbering runs across the 3 groups.
 
-### MONDAY output (simple: Ema wants all eyes on all clients, fast to read)
+### MONDAY output (all eyes on all clients, and DEEP per client: Ema, 2026-11-02)
 Ema's focus (2026-10-19): ROI is the headline, but she controls **30-min booked calls** and **leads per day**. Those two drive every signal.
 - **30-min booked calls are the priority.** Show 60-min booked (Pacow) small, never as the main number: the client books those.
 - **Leads per day per ad set, goal 10** (the Lead scaling trigger). Always show it.
 - Only **7-day roll** and **14-day roll**, written "7d / 14d". No T3, no T7/T14 labels.
 - **Signals:** 🟢 = cost per 30-min booking at/under target AND bookings coming in · 🟡 = bookings come in but cost over target, or leads under 10/day, or too new to judge · 🔴 = 0 bookings, clicks with no leads, or cost per booking over 1.3x max. Signal on the 7-day roll; say if 14d disagrees (improving / getting worse).
 - **Leave out:** offboarded clients, clients off for 7+ days, out-of-roster accounts. Show a client turned off in the last 7 days (one line). One "Not shown" line at the end listing who was skipped.
-- **No** deep-dive ladders, no ROI-backwards tables, no "all bad numbers" lists (Ema reads the numbers herself). The ROI walk still runs: use its #1 leak to pick the one fix.
+- **DEEP, always (Ema, 2026-11-02): "SUPER specific for me to be able to make the campaigns work. Not surface level."** After the board, every live client gets a deep block:
+  - The ladder with numbers at every step (spend → clicks → leads (GHL) → prequalified → booked → taken → clients → revenue), 7d and 14d, and where it breaks.
+  - Per ad set and per ad from `ghl_by_adset.py`: spend, real leads, CPL, bookings, cost per booking, sales, Meta ÷ GHL. Name every ad: keep / kill candidate (with the rule and the spend vs the kill line) / too early.
+  - The ROI walk's top leaks with multipliers.
+  - Numbered steps with the exact ad set, ad name, budget and number, plus what to check after (which number, by when).
+  - What we don't know yet and how to find out (who to ask, which tag or column).
 
 Output, in this order:
 1. **The board** (one table, every live client): client · signal · leads/day 7d / 14d · 30-min booked 7d / 14d · cost per 30-min booking 7d / 14d (target) · ROI 3 months collected (🚩 rules) · the one fix this week.
