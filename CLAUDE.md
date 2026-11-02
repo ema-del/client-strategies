@@ -332,6 +332,9 @@ Ema types **"monday"** or **"wednesday"** (optionally + client names). Run the m
 
 Read only, as always: findings and actions for Ema, never live changes.
 
+**Leads and CPL come from GHL, never from Meta (Ema, 2026-11-02).** For every client on GHL, leads, CPL and bookings per ad set and per ad are counted from GHL contacts (utm_content → map each ad to its ad set with Meta's ad list). Meta's lead count is only used in the tracking recap. Never quote a Meta CPL as a result. Lesson: Pacow OLead #2 showed 35 leads at €20 in Meta, but GHL had 5 leads (€194 each) and 0 bookings: the opposite call.
+**Never send a partial review.** The output waits until the sheets, Meta AND GHL are all in. If GHL is still running, wait. If it failed, say so before anything else and don't judge any ad set on Meta numbers.
+
 **Data pull (both days, before anything else):**
 1. All 10 workbooks + `scale_data.py` + `roi_backwards.py` (Data source steps 1-3). Always T7 and T14.
 2. Meta, every account: ad set level (budget, optimization goal, learning status, last edit, frequency, leads) and ad level (spend, clicks, leads, frequency, status incl. "with issues"), last 7 days. An account flagged "unqueryable" can still answer: try it before giving up.
