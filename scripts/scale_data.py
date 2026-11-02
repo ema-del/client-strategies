@@ -22,7 +22,7 @@ PCT = {"CTR", "LPCR", "PQ_rate", "Q_rate", "lead_to_booked", "SUP_30", "SUP_60",
 
 # Column names (row 1 of each month tab). Matched by name so a moved column still works.
 COLS = {
-    "spend": "Adspend", "impr": "Impr", "clicks": "Link Clicks", "leads": "Lead",
+    "spend": "Adspend", "impr": "Impr", "clicks": "Link Clicks", "leads": r"(Lead|Messages)$",  # DM funnel sheets count Messages as leads
     "pq": "Pre-Qualified Leads", "q": "Qualified Lead",
     "b30": r"(15|30) Min Calls Booked", "t30": r"(15|30) Calls Taken",
     "b60": "60 Min Calls Booked", "t60": "60 Calls Taken",
@@ -53,7 +53,7 @@ def col_index(header):
     for key, pat in COLS.items():
         for i, h in enumerate(header):
             if h and re.match(pat, str(h).strip(), re.I):
-                if key == "leads" and str(h).strip() != "Lead":
+                if key == "leads" and str(h).strip() not in ("Lead", "Messages"):
                     continue
                 idx[key] = i
                 break
@@ -127,7 +127,7 @@ def fmt(a):
 
 # Sheet target column -> computed key. Cost metrics use "Target: < $X Max: $Y"; rate metrics use "> N%".
 TARGET_MAP = [
-    (r"^CTR", "CTR", "spend"), (r"^Cost per Lead", "CPL", "leads"),
+    (r"^CTR", "CTR", "spend"), (r"^Cost per (Lead|Message)", "CPL", "leads"),
     (r"^Cost Per (15|30) Booked", "cost_per_booked_30", "b30"), (r"^(15|30) SUP", "SUP_30", "b30"),
     (r"^Cost Per (15|30) Call Taken", "cost_per_taken_30", "t30"),
     (r"^Cost Per 60 Booked", "cost_per_booked_60", "b60"), (r"^60 SUP", "SUP_60", "b60"),
@@ -136,7 +136,7 @@ TARGET_MAP = [
     (r"^Contracted-ROI", "ROI_contracted", "spend"), (r"^Collected-ROI", "ROI_collected", "spend"),
     (r"^Purchase Rate", "purchase_rate", "leads"),
 ]
-UNTRACKED_Q = {"cmtc", "sma", "uca", "ms"}  # no qualification step (by design, or not a call funnel)  # Pre-Qualified/Qualified not tracked by design
+UNTRACKED_Q = {"cmtc", "sma", "uca", "ms", "pp", "c101"}  # no qualification step (by design, or not a call funnel)  # Pre-Qualified/Qualified not tracked by design
 
 
 def parse_target(t):

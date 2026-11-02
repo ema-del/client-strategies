@@ -90,8 +90,11 @@ Set each client's level from booked calls per day (trailing 7 days).
 
 ## Funnel-specific scaling rules
 
-**DM ads / Messenger funnel** (Skool "The DM Ad Funnel"; client on it: PP)
+**DM ads / Messenger funnel** (Skool "The DM Ad Funnel"; clients on it: PP since Oct 26, Class101 since Oct 30)
 - Chain: spend → messages (conversations started) → response rate (**>25%**) → qualified (**20-25% of leads**) → booked → show → client.
+- Sheet ("FB DM Ad Tracking Sheet - B2C"): Messages, Cost per Message (<$15, cutoff $30-40), 15-min and 60-min calls booked/taken with a Keyword column, clients, revenue. `scale_data.py` reads Messages as leads and skips the qualified step; its LPCR line (messages ÷ link clicks) is not a DM metric, ignore it. Response rate and qualified % aren't in the sheet: ask the setter or read the DMs.
+- Review on a **7-day window**. Main number = **cost per booked call** (B2C $100-250, sheet target <$200, max $250, cutoff $500).
+- Diagnose backwards (Skool): bad CTR → new creative; CPM above ~$70 → weak call-out, niche down; expensive messages → one ad eating spend or fatigue; bad show rate → reminders; no clients → lead quality or sales; weak ROAS → price or close rate.
 - Benchmarks: cost per lead B2C direct **$10-25** (indirect $2-5); cost per booked call B2C **$100-250 (most ~$200)**; cost per client ~25% of program price; cash collected 2-3x spend, contracted 4-6x.
 - Best under ~$100/day; over that, look at conversion ads.
 - Each ad has its own keyword: bookings per ad come from the keyword (ad renamed daily with calls + clients), not GHL utm.
@@ -277,7 +280,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
 | edv | EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
 | pp | Personalized Prep | act_1747267276471518 | `17fseVTM39w18nAD3PvdSBIAh_kfqHB-qPBF0Z8fntYo` | **Messenger (DM ad) funnel** since late Oct 2026 (Ema, 2026-10-28). Judge with the DM Ad Funnel benchmarks below. Old sheet `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` is retired. |
-| c101 | Class101 | act_2980228195651210 | `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` | Ads MCP blocked (rolling out) |
+| c101 | Class101 | act_2980228195651210 | `1Ata7HhBeW5ci4FK8uMr4kToyQH7XcwCBUe7bXaZxhIU` | **Messenger (DM ad) funnel** since Oct 30, 2026 (Ema, 2026-11-02). Judge with the DM Ad Funnel benchmarks. Old sheet `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` is retired. Ads MCP blocked (rolling out). |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
 | sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. The xlsx export is too big for the Drive connector (the A/B LP test bank tab holds images). Download it with `exportMimeType` = `application/zip` (HTML of every tab), then run `python3 -I scripts/html2xlsx.py <saved path> <scratchpad>/sma.json 2026` and pass `sma=<scratchpad>/sma.json` to the scripts. Same fix for any other sheet whose xlsx export crashes the connector. Sheet targets: CPL <£15 (max £20), cost per 45-min booked <£50 (max £100). |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
@@ -303,7 +306,7 @@ Every run also checks every other ad account in Meta for spend in the last 7 day
 
 **Gaja Collective (act_1095582199186919) is a client, but not launched by us yet: ignore it in runs for now (Ema, 2026-10-26).**
 
-**Funnel types (Ema, 2026-10-26/28):** CNA and TC = lead form funnel. CPP = webinar funnel. PP = Messenger (DM ad) funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
+**Funnel types (Ema, 2026-10-26/28):** CNA and TC = lead form funnel. CPP = webinar funnel. PP and Class101 = Messenger (DM ad) funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
 
 "Smarta Tutoring" (sma) and "Much Smarter" (ms, act_1188526852804019) are different companies. Never mix them up.
 
