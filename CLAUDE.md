@@ -291,7 +291,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | Key | Client | Meta Account | Sheet ID | Notes |
 |---|---|---|---|---|
 | pocr | Pacow OCompleteRegistration | act_3720107534883410 | `1bkzfuqn968YoJXiY7GHTLNzCA8JFB2Ak7swifecJw9E` | Separate OCR sheet. The main Pacow sheet counts OLead only. |
-| ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account unqueryable: sheet only. Launched about Oct 13. |
+| ips | IPS (Institute of Pediatric Sleep) | act_54671718 | `1gEF5m_tq_UkkBfkJDcnIN3bJK8b4n8lTig0FcTSXNZU` | Meta account is queryable. Launched about Oct 13. **CRM is ActiveCampaign, not GHL** (its GHL location is empty): bookings per ad come from Ema / AC. Nov 6: booked calls come from P3 Founder Image. |
 | cna | CNA Training Institute | act_10150383113508216 | `11wgx68clelDJNlI3PlMNQNd-ZBGPiiml3wPBK5YbkNM` | **Lead form funnel.** Ads MCP blocked. Launched Oct 15. |
 | tc | Tutoring Club Round Rock | act_1083923977552261 | `1E1dYj8DHjuyD7B1h6pVVMEiVAxdl-q735id5_15QzLE` | **Lead form funnel** (Meta instant form). Launched Oct 15. |
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
