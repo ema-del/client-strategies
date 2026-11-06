@@ -32,6 +32,12 @@ def norm(s):
     return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
 
 
+def first_num(v):
+    """Meta sometimes labels results ("130 profile visits"): take the leading number."""
+    m = re.match(r"\s*(-?[\d,]*\.?\d+)", str(v or 0))
+    return float(m.group(1).replace(",", "")) if m else 0.0
+
+
 def load_meta(path):
     if path.endswith(".csv"):
         rows = list(csv.DictReader(open(path)))
@@ -39,8 +45,8 @@ def load_meta(path):
         rows = json.load(open(path))
     out = []
     for r in rows:
-        out.append({"ad": r["ad"], "adset": r["adset"], "spend": float(r.get("spend") or 0),
-                    "meta_leads": float(r.get("meta_leads") or 0)})
+        out.append({"ad": r["ad"], "adset": r["adset"], "spend": first_num(r.get("spend")),
+                    "meta_leads": first_num(r.get("meta_leads"))})
     return out
 
 
