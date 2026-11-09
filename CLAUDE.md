@@ -42,7 +42,7 @@ The windows end **yesterday**, because today's row is usually incomplete.
 
 **Always review BOTH the last 7 days AND the last 14 days**, for every client, every run. Show both numbers side by side (e.g. "CPB T7 $204 / T14 $126") and judge both. When they disagree, say which way it's trending (T7 better than T14 = improving, worse = getting worse). T3 is only for the refresh check.
 
-**Step 3. Only if a download fails** for a client: if the connector says the message was too large, re-download with `exportMimeType` = `application/zip` and convert with `scripts/html2xlsx.py` (see Smarta). Otherwise retry that one once. If it still fails, say so for that client and carry on with the rest. Never fill gaps with guesses.
+**Step 3. Only if a download fails** for a client: if the connector says the message was too large, re-download with `exportMimeType` = `application/zip` (HTML of every tab) and convert with `python3 -I scripts/html2xlsx.py <saved path> <scratchpad>/<key>.json 2026`, then pass `<key>=<scratchpad>/<key>.json` to the scripts. Otherwise retry that one once. If it still fails, say so for that client and carry on with the rest. Never fill gaps with guesses.
 
 **Step 4. Meta Ads (only for clients that pass step 1, "no leak").** Use the Meta Ads MCP to check what the sheet can't show: ad set learning status, last budget change, current daily budget, ABO vs CBO, number of live ads, testing ad set (Level 2+), and frequency. Check `is_ads_mcp_enabled` via `ads_get_ad_accounts` first. EdvancedLearning and Class101 are MCP-blocked: write "verify in Ads Manager". **Read only. Never change a budget, status or ad.**
 
@@ -278,11 +278,9 @@ Fix top 2-3 together: ROI <now> → <after>
 | Key | Client | Meta Account | Sheet ID | Notes |
 |---|---|---|---|---|
 | pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
-| edv | EdvancedLearning | act_912963885192972 | `1wiyaH2GaVdBmUgN1r5ETsswxaG7SQ72zHGShsuA7JaY` | Ads MCP blocked (rolling out) |
 | pp | Personalized Prep | act_1747267276471518 | `17fseVTM39w18nAD3PvdSBIAh_kfqHB-qPBF0Z8fntYo` | **Messenger (DM ad) funnel** since late Oct 2026 (Ema, 2026-10-28). Judge with the DM Ad Funnel benchmarks below. Old sheet `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` is retired. |
 | c101 | Class101 | act_2980228195651210 | `1Ata7HhBeW5ci4FK8uMr4kToyQH7XcwCBUe7bXaZxhIU` | **Messenger (DM ad) funnel** since Oct 30, 2026 (Ema, 2026-11-02). Judge with the DM Ad Funnel benchmarks. Old sheet `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` is retired. Ads MCP blocked (rolling out). |
 | nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
-| sma | Smarta Tutoring | act_597834280814934 (Ad Account #1, the only funded one) | `15O7YdAcAXd7HEn9K81F6PNBDYt9vmg4D90qCmTTkr-M` | "(ST) OLead - Business Reporting B2C" (since 2026-10-13; data starts late Sep). Pre-Qualified/Qualified not tracked by design. GBP (header says USD). Old sheet `1hILrWWaiuV06tTlFmhPBj7iqfxIHiS1WMZUIzoqHweM` is retired: don't use it. The xlsx export is too big for the Drive connector (the A/B LP test bank tab holds images). Download it with `exportMimeType` = `application/zip` (HTML of every tab), then run `python3 -I scripts/html2xlsx.py <saved path> <scratchpad>/sma.json 2026` and pass `sma=<scratchpad>/sma.json` to the scripts. Same fix for any other sheet whose xlsx export crashes the connector. Sheet targets: CPL <£15 (max £20), cost per 45-min booked <£50 (max £100). |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
@@ -297,14 +295,15 @@ Fix top 2-3 together: ROI <now> → <after>
 | cpp | College Prep Pro | act_1332534914680605 | `1cIt_lcLmhO0R9fcsM1ukLW2q2vLVrtgx506peZmLaIQ` | **Webinar funnel**: one tab per webinar, `scale_data.py` can't read it, read the tabs directly. Ads MCP blocked. |
 | usm (STOPPED) | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
+| gaja | Gaja Collective | act_1095582199186919 | `1KxiVVZbHiX0ckZisPrS06_lrQ6LHBXl1_N3-IhO_FUk` | Added to every run (Ema, 2026-11-09). GHL location: "Gaja Collective". |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
-**Offboarded (Ema, 2026-10-19 and 2026-10-26): Lingua Verna, College Zoom, Cyber6, Zinkerz, Core Medical (CMS), Englisher. Never include them in any run, even if their ad accounts still spend. Don't list them in "Not shown" either.**
+**Offboarded (Ema, 2026-10-19, 2026-10-26 and 2026-11-09): Lingua Verna, College Zoom, Cyber6, Zinkerz, Core Medical (CMS), Englisher, EdvancedLearning, Smarta Tutoring. Never include them in any run, even if their ad accounts still spend. Don't list them in "Not shown" either.**
 
 **USM: stopped (Ema, 2026-10-28). Don't run USM in Monday or Wednesday until Ema says it's back.**
 
-**Gaja Collective (act_1095582199186919) is a client, but not launched by us yet: ignore it in runs for now (Ema, 2026-10-26).**
+**Gaja Collective: include in EVERY run (Ema, 2026-11-09).** See the roster row `gaja`.
 
 **Funnel types (Ema, 2026-10-26/28):** CNA and TC = lead form funnel. CPP = webinar funnel. PP and Class101 = Messenger (DM ad) funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
 
@@ -430,7 +429,6 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 | Personalized Prep | DWY | https://docs.google.com/spreadsheets/d/1ydOARWLGTq1ZpkSUPqq3mRG5mm5DxVDlPhT3Z-i32Sw/edit |
 | Class101 | DWY | https://docs.google.com/spreadsheets/d/1xXsQNLAYVsjGMT5mk7EFN2ngHQo4NfvN-7T9xFTWPGM/edit |
 | North Ave | DWY | https://docs.google.com/spreadsheets/d/1ogYZOegjmxZQyCgq4ZQWLbbwazq1rYtgaagC5fehwoc/edit |
-| EdvancedLearning | DWY | https://docs.google.com/spreadsheets/d/1vL985jrMiUlWDNjRLRiGEk66cUuDunX1fyyeu_WSDU4/edit |
 | UCA | GrowthOS roadmap exists, no profile (confirm offer) | https://docs.google.com/spreadsheets/d/1qHAz-eOS9y7jefjKCFWYJGCo9vQktA-u1vQ2mQrTP4I/edit |
 | Lingua Verna | check profile | https://docs.google.com/spreadsheets/d/1Nwze4rpdzfWFW_KOXhmcEueJRmxDsYkMSI_r8E_inrM/edit |
 | College Zoom | check profile | https://docs.google.com/spreadsheets/d/1zWmTR6CijXJmfv9mrYda217tPpbrSjZaDN7kErKtAFA/edit |
@@ -441,7 +439,6 @@ Check the offer first (Client Profiles folder). Course reminder only for clients
 | USM | check profile | https://docs.google.com/spreadsheets/d/1rVRn_kQCHZgxWlzizK65J__B9vNaBfIZA8FqMfrtpmU/edit |
 | Cyber6 | check profile | https://docs.google.com/spreadsheets/d/1VmF5uDnwHgbhmoUY0jKNA5UPPe8bekv6s0tDzuf3RVU/edit |
 | GFM | check profile | https://docs.google.com/spreadsheets/d/1DIx09a-YiLHRfhZAaulD3kolRZ0XsNfizIEnosRnPwQ/edit |
-| Smarta | DFY: no course reminder | none |
 | Much Smarter | unknown: ask Ema | none found |
 
 ### Learnings from the trial runs (apply every time)
