@@ -83,7 +83,9 @@ def match(utm, ads, manual):
     inside = [k for k in by_norm if n and (n in k or k in n)]
     if len(inside) == 1:
         return by_norm[inside[0]]
-    best = difflib.get_close_matches(n, inside or list(by_norm), n=1, cutoff=0.5 if inside else 0.6)
+    if len(inside) > 1:  # e.g. "breakingvika" fits "breaking vika claude" and "breakingvikap1..p5": never guess
+        return None
+    best = difflib.get_close_matches(n, list(by_norm), n=1, cutoff=0.6)
     return by_norm[best[0]] if best else None
 
 
