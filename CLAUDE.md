@@ -401,6 +401,12 @@ Per client:
    - **Where they go:** new ad set (Lead/booking campaigns, about $50/day), same ad set (webinars under 20 registrations/day), or into the bank to launch later.
    - **Direction, not scripts:** the winner it builds on (sales → cost per booked call, say which), what stays locked (offer, winning pain), and 3-5 directions to explore (new angles, formats, awareness levels or pain points). Short and loose: Ema writes or briefs the actual ads.
    - Flag any new ads sitting inside a winning ad set (they starve).
+7. **Airtable sync (every Wednesday, Ema 2026-11-11).** Keep the ad board ("Paid Ads 🚀", base `apprmTJjM1hGBQJAG`, table `tblKMxDFIz7lT7djE`) matching reality. Full rules, field IDs and allowed values: `docs/airtable_ad_board.md`. Uses the Meta + GHL data already pulled for the run.
+   - Every ad that ran since the client's launch (or 2026-05-01) has exactly one card, all 9 fields filled (name, client, status, type, awareness, angle, pain, offer, hook). Hook = text ON the image or the first caption/script line; can't see it = "check hook (...)", never a guess.
+   - Status: live = Testing · off and not a winner = Not Winners/Killed · in the Drive ad bank folder, never launched = In Bank.
+   - **Winner:** best = 1+ sale at a cost per sale under the sheet's max cost per new client ($2,000). Otherwise cost per main booked call at/under the sheet's MAX (B2C call funnels: 30-min booked $300 · Pacow: 60-min booked €500 · DM funnels PP/Class101: $250). Bookings and sales per ad from GHL utm_content (DM funnels: the keyword). A live ad with only 1 booking stays Testing.
+   - Class101, CNA, CPP: Meta blocked (and no GHL for CNA/CPP). Cards from Drive and sheets; Ema moves Winner/Killed herself.
+   - **Output:** a short "Airtable changes" list per client (new cards, status moves with the number that decided it, hooks fixed). Write it to Airtable only after Ema says go. Never touch Big Idea / Doing It / Writing / Ready to Film / Editing cards unless that ad actually launched.
 
 End of Wednesday:
 - **Recap table**: client · verdict (scale / bump / hold / fix / kill) · why (check or gate) · #1 ROI leak (×) · ROI flag.
