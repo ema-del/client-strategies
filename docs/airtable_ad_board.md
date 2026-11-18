@@ -48,3 +48,4 @@ Field values in "fields" use field IDs as keys and plain option names as values.
 - Offboarded clients' cards were deleted (Smarta, CMS, Zinkerz, EdvancedLearning, Button School, College Zoom, CCUS). USM, AIS and LWT cards are kept.
 - Ad bank = creatives in the client's Drive ad bank folder that never launched. Ema makes placeholder cards (e.g. "P1 card") in the ad bank session.
 - No extra columns on the table. "Field 17" stays unused.
+- A whole campaign paused by the client or for a short break (e.g. IPS, Nov 16) is a temporary pause: its cards stay Testing. Only ads turned off one by one move to Killed. Ask Ema when unsure (Ema, 2026-11-18).
