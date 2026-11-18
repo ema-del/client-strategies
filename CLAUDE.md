@@ -280,7 +280,7 @@ Fix top 2-3 together: ROI <now> → <after>
 | pcw | Pacow Media | act_3720107534883410 | `1Rnf9ydutojWkWozdMgp6tXvZL8yGHZ-dzS1e36LUffU` | B2B |
 | pp | Personalized Prep | act_1747267276471518 | `17fseVTM39w18nAD3PvdSBIAh_kfqHB-qPBF0Z8fntYo` | **Messenger (DM ad) funnel** since late Oct 2026 (Ema, 2026-10-28). Judge with the DM Ad Funnel benchmarks below. Old sheet `1tNfePmCajYBhJRibCiVeUk4UJZPn1IXTnxW7X9k3W4Y` is retired. |
 | c101 | Class101 | act_2980228195651210 | `1Ata7HhBeW5ci4FK8uMr4kToyQH7XcwCBUe7bXaZxhIU` | **Messenger (DM ad) funnel** since Oct 30, 2026 (Ema, 2026-11-02). Judge with the DM Ad Funnel benchmarks. Old sheet `1BDn5J24XwEhq6IagIqGZAOd6nO-J6QAGM5Xdc3ebDxk` is retired. Ads MCP blocked (rolling out). |
-| nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | |
+| nae | North Avenue Education | act_10100817269307566 | `1Z82ommJsxEn13PArnAGGu1Ki5H1OAvhVWnhze-DnDKI` | Only "OLead - NAE - 30+" (OLead – Membership) is ours. The SAT/ACT Webinar traffic campaign and Marketplace listing boosts (e.g. "2 Beds 1 Bath House") are NOT ours: leave them out of reviews, kill tables, spend totals and Airtable (Ema, 2026-11-18). |
 | uca | UCA | act_1150974895696033 | `1L23VKg6j2MG5g7f8vq5XuF-LWgIMP7K9QMTulyDijw4` | **Low-ticket funnel** (no calls). Ads launched 2026-10-09. |
 | ms | Much Smarter (MS, "TheGame") | act_1188526852804019 | `1xFKdhYqGNlY-R0NEnJYmSM8S25ra9kRQU_kY563YI6A` | **Subscription funnel** (free trial → paid sub, no calls). Ads launched 2026-10-08. |
 
