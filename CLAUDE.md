@@ -296,8 +296,8 @@ Fix top 2-3 together: ROI <now> → <after>
 | usm (STOPPED) | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 | gaja | Gaja Collective | act_1095582199186919 | `1KxiVVZbHiX0ckZisPrS06_lrQ6LHBXl1_N3-IhO_FUk` | Added to every run (Ema, 2026-11-09). GHL location: "Gaja Collective". |
-| lna | LNA Health Careers | act_1023951874630614 | `1VHEfEryyZ8gJIIrbvFG-WkmtVBc4Sq78olonTn352IQ` | Added to every run (Ema, 2026-11-25). Campaign "OLead - Manchester - Free Call". No client recap. |
-| aa | AA | act_1051531133248395 | `1gc4vwwzMHKSteGkhZaFds3YBX3T92kkYMS8HKC8BUpQ` | Added to every run (Ema, 2026-11-25). No client recap. |
+| lna | LNA Health Careers | act_1023951874630614 | `1VHEfEryyZ8gJIIrbvFG-WkmtVBc4Sq78olonTn352IQ` | Added to every run (Ema, 2026-11-25). Campaign "OLead - Manchester - Free Call" (launched Nov 19). GHL location `y1MqcXeCXZZbilWg5fWq` ("LNA Training Programs in New Hampshire"), America/New_York. Instant-form lead funnel. No client recap. |
+| aa | AA | act_1051531133248395 | `1gc4vwwzMHKSteGkhZaFds3YBX3T92kkYMS8HKC8BUpQ` | Ascentia Academy (AUD, Australia/Sydney). Added to every run (Ema, 2026-11-25). GHL location `dwCSWIRIM6s4UBLxQWOM`. Campaign "oLead - Summer Holiday Program" (created Nov 25). No client recap. |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
