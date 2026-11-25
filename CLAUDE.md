@@ -296,6 +296,8 @@ Fix top 2-3 together: ROI <now> → <after>
 | usm (STOPPED) | University of Santa Monica | act_785549255489263 | `18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ` | **Webinar funnel** (same rules as CPP): one tab per webinar, read the tabs directly, judge on cost per registration, show-up live, bookings from the webinar. Reporting sheet: https://docs.google.com/spreadsheets/d/18d8rUDZPAQ62sdszlK_J6gc1_wS0bqoYSOOpK9xB3yQ/edit?gid=212552964 (Ema, 2026-10-21). |
 | gfm | GFM | act_3430858818430 | `1FH7z0E_IQ6x3civ9vV000tAx4DMuocld7o0KGU0SsNY` | Near-zero spend: ask Ema if still a client. |
 | gaja | Gaja Collective | act_1095582199186919 | `1KxiVVZbHiX0ckZisPrS06_lrQ6LHBXl1_N3-IhO_FUk` | Added to every run (Ema, 2026-11-09). GHL location: "Gaja Collective". |
+| lna | LNA Health Careers | act_1023951874630614 | `1VHEfEryyZ8gJIIrbvFG-WkmtVBc4Sq78olonTn352IQ` | Added to every run (Ema, 2026-11-25). Campaign "OLead - Manchester - Free Call". No client recap. |
+| aa | AA | act_1051531133248395 | `1gc4vwwzMHKSteGkhZaFds3YBX3T92kkYMS8HKC8BUpQ` | Added to every run (Ema, 2026-11-25). No client recap. |
 
 Every run also checks every other ad account in Meta for spend in the last 7 days and flags any spender not listed here.
 
@@ -304,6 +306,8 @@ Every run also checks every other ad account in Meta for spend in the last 7 day
 **USM: stopped (Ema, 2026-10-28). Don't run USM in Monday or Wednesday until Ema says it's back.**
 
 **Gaja Collective: include in EVERY run (Ema, 2026-11-09).** See the roster row `gaja`.
+
+**LNA Health Careers and AA: include in EVERY run (Ema, 2026-11-25).** See the roster rows `lna` and `aa`.
 
 **Funnel types (Ema, 2026-10-26/28):** CNA and TC = lead form funnel. CPP = webinar funnel. PP and Class101 = Messenger (DM ad) funnel. MS = free trial app funnel. UCA = low-ticket funnel. The rest = free training / call funnel.
 
@@ -428,7 +432,7 @@ Per client, for the client to read (they don't know what the numbers mean):
 
   Remember: you've invested in learning how to run these ads, and that starts with watching the course modules on time, before coaching, so you can apply it to your own ads.
 
-Check the offer first (Client Profiles folder). Course reminder only for clients with course modules (GrowthOS 90-day / DWY). Done-for-you (Smarta): no course reminder. No client recap for Pacow (that's us). Every other live client gets a recap every Monday (Good news / Bad news included), even when the offer isn't in the CRM yet (Ema, 2026-10-26): write it for their funnel type and skip only the course reminder if the offer is unknown.
+Check the offer first (Client Profiles folder). Course reminder only for clients with course modules (GrowthOS 90-day / DWY). Done-for-you (Smarta): no course reminder. No client recap for Pacow (that's us), Gaja, LNA or AA (Ema, 2026-11-25). Every other live client gets a recap every Monday (Good news / Bad news included), even when the offer isn't in the CRM yet (Ema, 2026-10-26): write it for their funnel type and skip only the course reminder if the offer is unknown.
 
 | Client | Offer | Roadmap |
 |---|---|---|
